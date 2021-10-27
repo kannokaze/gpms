@@ -1,0 +1,225 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gpms.mapper.RelationStuComMapper">
+	<resultMap id="BaseResultMap" type="com.gpms.po.RelationStuCom">
+		<id column="sc_id" jdbcType="INTEGER" property="scId" />
+		<result column="sc_stu_no" jdbcType="VARCHAR" property="scStuNo" />
+		<result column="sc_com_acc" jdbcType="VARCHAR" property="scComAcc" />
+		<result column="sc_state" jdbcType="CHAR" property="scState" />
+	</resultMap>
+
+	<resultMap id="companyMap" type="com.gpms.po.Company">
+		<id column="com_id" jdbcType="INTEGER" property="comId" />
+		<result column="com_account" jdbcType="VARCHAR" property="comAccount" />
+		<result column="com_name" jdbcType="VARCHAR" property="comName" />
+		<result column="com_address" jdbcType="VARCHAR" property="comAddress" />
+		<result column="com_trade" jdbcType="VARCHAR" property="comTrade" />
+		<result column="com_manager" jdbcType="VARCHAR" property="comManager" />
+		<result column="com_phone" jdbcType="CHAR" property="comPhone" />
+		<result column="com_email" jdbcType="VARCHAR" property="comEmail" />
+		<result column="com_registime" jdbcType="TIMESTAMP" property="comRegistime" />
+		<result column="com_state" jdbcType="CHAR" property="comState" />
+		<result column="sc_state" jdbcType="CHAR" property="scState" />
+	</resultMap>
+
+	<resultMap id="studentMap" type="com.gpms.po.Student">
+		<id column="stu_id" jdbcType="INTEGER" property="stuId" />
+		<result column="stu_no" jdbcType="VARCHAR" property="stuNo" />
+		<result column="stu_name" jdbcType="VARCHAR" property="stuName" />
+		<result column="stu_phone" jdbcType="CHAR" property="stuPhone" />
+		<result column="stu_email" jdbcType="VARCHAR" property="stuEmail" />
+		<result column="stu_gender" jdbcType="INTEGER" property="stuGender" />
+		<result column="stu_address" jdbcType="VARCHAR" property="stuAddress" />
+		<result column="stu_state" jdbcType="CHAR" property="stuState" />
+		<result column="stu_stage" jdbcType="VARCHAR" property="stuStage" />
+		<result column="stu_class_no" jdbcType="VARCHAR" property="stuClassNo" />
+		<result column="stu_tea_no" jdbcType="VARCHAR" property="stuTeaNo" />
+		<result column="stu_maj_code" jdbcType="VARCHAR" property="stuMajCode" />
+		<result column="stu_dir_code" jdbcType="VARCHAR" property="stuDirCode" />
+		<result column="sc_state" jdbcType="CHAR" property="scState" />
+	</resultMap>
+
+	<sql id="Base_Column_List">
+		sc_id, sc_stu_no, sc_com_acc,sc_state
+	</sql>
+
+	<sql id="Company_Column_List">
+		com_id, com_account, com_name, com_address,
+		com_trade,
+		com_manager,
+		com_phone, com_email, com_registime, com_state,sc_state
+	</sql>
+
+	<sql id="Student_Column_List">
+		gpms_user_students.stu_id, gpms_user_students.stu_no,
+		gpms_user_students.stu_name, gpms_user_students.stu_phone,
+		gpms_user_students.stu_email, gpms_user_students.stu_gender,
+		gpms_user_students.stu_address,
+		gpms_user_students.stu_state,
+		gpms_user_students.stu_stage, gpms_user_students.stu_class_no,
+		gpms_user_students.stu_tea_no,
+		gpms_user_students.stu_maj_code,
+		gpms_user_students.stu_dir_code,
+		gpms_user_students.stu_sch_id,gpms_rela_stu_com.sc_state
+	</sql>
+	
+	<select id="selectMyCompanyByStuNo" resultMap="companyMap">
+		select
+		<include refid="Company_Column_List" />
+		from gpms_user_companies,gpms_rela_stu_com
+		WHERE
+		gpms_rela_stu_com.sc_com_acc = gpms_user_companies.com_account
+		AND gpms_rela_stu_com.sc_stu_no = #{0}
+		AND gpms_rela_stu_com.sc_state = "1"
+		<!-- LEFT OUTER JOIN gpms_user_students ON gpms_user_students.stu_no = 
+			gpms_rela_stu_com.sc_stu_no where gpms_rela_stu_com.sc_stu_no = #{0} -->
+
+	</select>
+	<!-- 查询所有 为了学生 -->
+	<select id="selectAllForStudentByStuNo" resultMap="companyMap">
+		select
+		<include refid="Company_Column_List" />
+		from gpms_user_companies
+		LEFT OUTER JOIN gpms_rela_stu_com
+		ON
+		gpms_rela_stu_com.sc_com_acc = gpms_user_companies.com_account
+		AND gpms_rela_stu_com.sc_stu_no = #{0}
+		<!-- LEFT OUTER JOIN gpms_user_students ON gpms_user_students.stu_no = 
+			gpms_rela_stu_com.sc_stu_no where gpms_rela_stu_com.sc_stu_no = #{0} -->
+
+	</select>
+	<!-- 按条件查询所有 为了学生 -->
+	<select id="selectCompaniesForStudentByKey" resultMap="companyMap">
+		select
+		<include refid="Company_Column_List" />
+		from gpms_user_companies
+		LEFT OUTER JOIN gpms_rela_stu_com
+		ON
+		gpms_rela_stu_com.sc_com_acc = gpms_user_companies.com_account
+		AND gpms_rela_stu_com.sc_stu_no = #{stuNo}
+		<trim prefix="WHERE" prefixOverrides="OR">
+			<if test="company.comName != null"> gpms_user_companies.com_name like concat('%',#{company.comName},'%') </if>
+			<if test="company.comAccount != null"> or gpms_user_companies.com_account like concat('%',#{company.comAccount},'%') </if>
+			
+		</trim>
+	</select>
+
+	<!-- 查询所有 为了公司 -->
+	<select id="selectAllForCompany" resultMap="studentMap">
+		select
+		<include refid="Student_Column_List" />
+		from gpms_user_students,gpms_rela_stu_com
+		where
+		gpms_rela_stu_com.sc_stu_no = gpms_user_students.stu_no
+		and
+		gpms_rela_stu_com.sc_com_acc = #{0}
+	
+	</select>
+	
+	<!-- 按届期查询所有 为了公司 -->
+	<select id="selectAllForCompanyByStage" resultMap="studentMap">
+		select
+		<include refid="Student_Column_List" />
+		from gpms_user_students,gpms_rela_stu_com
+		where
+		gpms_rela_stu_com.sc_stu_no = gpms_user_students.stu_no
+		and
+		gpms_rela_stu_com.sc_com_acc = #{0}
+		and
+		gpms_user_students.stu_stage = #{1}
+	</select>
+	
+	<select id="selectStudentInfoByStageAndComAcc" resultMap="studentMap">
+		select
+		<include refid="Student_Column_List" />
+		from gpms_user_students,gpms_rela_stu_com
+		where
+		gpms_user_students.stu_stage = #{0}
+		and
+		gpms_rela_stu_com.sc_com_acc =
+		#{1}
+		and
+		gpms_user_students.stu_no = gpms_rela_stu_com.sc_stu_no
+		and
+		gpms_rela_stu_com.sc_state = "1"
+	</select>
+
+	<!-- *********************************************************** -->
+	<select id="selectByPrimaryKey" parameterType="java.lang.Integer"
+		resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from gpms_rela_stu_com
+		where sc_id = #{scId,jdbcType=INTEGER}
+	</select>
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+		delete from
+		gpms_rela_stu_com
+		where sc_id = #{scId,jdbcType=INTEGER}
+	</delete>
+	<insert id="insert" parameterType="com.gpms.po.RelationStuCom">
+		insert into gpms_rela_stu_com
+		(sc_id, sc_stu_no, sc_com_acc
+		)
+		values (#{scId,jdbcType=INTEGER},
+		#{scStuNo,jdbcType=VARCHAR},
+		#{scComAcc,jdbcType=VARCHAR}
+		)
+	</insert>
+	<insert id="insertSelective" parameterType="com.gpms.po.RelationStuCom">
+		insert into gpms_rela_stu_com
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="scId != null">
+				sc_id,
+			</if>
+			<if test="scStuNo != null">
+				sc_stu_no,
+			</if>
+			<if test="scComAcc != null">
+				sc_com_acc,
+			</if>
+			<if test="scState != null">
+				sc_state,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="scId != null">
+				#{scId,jdbcType=INTEGER},
+			</if>
+			<if test="scStuNo != null">
+				#{scStuNo,jdbcType=VARCHAR},
+			</if>
+			<if test="scComAcc != null">
+				#{scComAcc,jdbcType=VARCHAR},
+			</if>
+			<if test="scState != null">
+				#{scState,jdbcType=VARCHAR},
+			</if>
+		</trim>
+	</insert>
+	<update id="updateByComAccAndStuNo" parameterType="com.gpms.po.RelationStuCom">
+		update gpms_rela_stu_com
+		<set>
+			<if test="scStuNo != null">
+				sc_stu_no = #{scStuNo,jdbcType=VARCHAR},
+			</if>
+			<if test="scComAcc != null">
+				sc_com_acc = #{scComAcc,jdbcType=VARCHAR},
+			</if>
+			<if test="scState != null">
+				sc_state = #{scState,jdbcType=VARCHAR},
+			</if>
+		</set>
+		where sc_stu_no = #{scStuNo,jdbcType=VARCHAR}
+		and sc_com_acc = #{scComAcc,jdbcType=VARCHAR}
+	</update>
+	<update id="updateByPrimaryKey" parameterType="com.gpms.po.RelationStuCom">
+		update
+		gpms_rela_stu_com
+		set sc_stu_no = #{scStuNo,jdbcType=VARCHAR},
+		sc_com_acc = #{scComAcc,jdbcType=VARCHAR}
+		where sc_id =
+		#{scId,jdbcType=INTEGER}
+	</update>
+
+</mapper>

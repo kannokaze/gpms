@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gpms.mapper.ClassMapper">
+	<resultMap id="BaseResultMap" type="com.gpms.po.Class">
+		<id column="class_id" jdbcType="INTEGER" property="classId" />
+		<result column="class_no" jdbcType="VARCHAR" property="classNo" />
+		<result column="class_name" jdbcType="VARCHAR" property="className" />
+		<result column="class_sign" jdbcType="VARCHAR" property="classSign" />
+		<result column="class_maj_code" jdbcType="VARCHAR" property="classMajCode" />
+
+	</resultMap>
+	<resultMap id="BaseResultMap2" type="com.gpms.po.Class">
+		<id column="class_id" jdbcType="INTEGER" property="classId" />
+		<result column="class_no" jdbcType="VARCHAR" property="classNo" />
+		<result column="class_name" jdbcType="VARCHAR" property="className" />
+		<result column="class_sign" jdbcType="VARCHAR" property="classSign" />
+		<result column="class_maj_code" jdbcType="VARCHAR" property="classMajCode" />
+		<result column="maj_name" jdbcType="VARCHAR" property="majName" />
+	</resultMap>
+	
+	<sql id="Base_Column_List">
+		class_id, class_no, class_name, class_sign
+	</sql>
+
+	<sql id="Base_Column_List2">
+		gpms_class.class_id, 
+		gpms_class.class_no,
+		gpms_class.class_name,
+		gpms_class.class_sign,
+		gpms_class.class_maj_code,
+		gpms_major.maj_name
+	</sql>
+
+	<!-- 查询班级列表 -->
+	<select id="SelectAll" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from gpms_class
+	</select>
+	<!-- 查询班级列表 -->
+	<select id="SelectClasses" resultMap="BaseResultMap2">
+		select
+		<include refid="Base_Column_List2" />
+		from gpms_class,gpms_major
+		where
+		gpms_class.class_maj_code = gpms_major.maj_code;
+	</select>
+
+	<!-- *********************************************************** -->
+	<select id="selectByPrimaryKey" parameterType="java.lang.Integer"
+		resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from gpms_class
+		where class_id = #{classId,jdbcType=INTEGER}
+	</select>
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+		delete from
+		gpms_class
+		where class_no = #{classNo}
+	</delete>
+	<insert id="insert" parameterType="com.gpms.po.Class">
+		insert into gpms_class
+		(class_id, class_no, class_name,
+		class_maj_code)
+		values
+		(#{classId,jdbcType=INTEGER}, #{classNo,jdbcType=VARCHAR},
+		#{className,jdbcType=VARCHAR},
+		#{classMajCode,jdbcType=VARCHAR})
+	</insert>
+	<insert id="insertSelective" parameterType="com.gpms.po.Class">
+		insert into gpms_class
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="classId != null">
+				class_id,
+			</if>
+			<if test="classNo != null">
+				class_no,
+			</if>
+			<if test="className != null">
+				class_name,
+			</if>
+			<if test="classMajCode != null">
+				class_maj_code,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="classId != null">
+				#{classId,jdbcType=INTEGER},
+			</if>
+			<if test="classNo != null">
+				#{classNo,jdbcType=VARCHAR},
+			</if>
+			<if test="className != null">
+				#{className,jdbcType=VARCHAR},
+			</if>
+			<if test="classMajCode != null">
+				#{classMajCode,jdbcType=VARCHAR},
+			</if>
+		</trim>
+	</insert>
+	<update id="updateByPrimaryKeySelective" parameterType="com.gpms.po.Class">
+		update gpms_class
+		<set>
+			<if test="classNo != null">
+				class_no = #{classNo,jdbcType=VARCHAR},
+			</if>
+			<if test="className != null">
+				class_name = #{className,jdbcType=VARCHAR},
+			</if>
+			<if test="classMajCode != null">
+				class_maj_code = #{classMajCode,jdbcType=VARCHAR},
+			</if>
+		</set>
+		where class_no = #{classNo,jdbcType=INTEGER}
+	</update>
+	<update id="updateByPrimaryKey" parameterType="com.gpms.po.Class">
+		update gpms_class
+		set class_no = #{classNo,jdbcType=VARCHAR},
+		class_name =
+		#{className,jdbcType=VARCHAR},
+		class_maj_code =
+		#{classMajCode,jdbcType=VARCHAR}
+		where class_id =
+		#{classId,jdbcType=INTEGER}
+	</update>
+</mapper>

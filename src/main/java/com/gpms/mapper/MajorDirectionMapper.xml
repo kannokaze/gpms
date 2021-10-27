@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gpms.mapper.MajorDirectionMapper">
+  <resultMap id="BaseResultMap" type="com.gpms.po.MajorDirection">
+    <id column="dir_id" jdbcType="INTEGER" property="dirId" />
+    <result column="dir_code" jdbcType="VARCHAR" property="dirCode" />
+    <result column="dir_name" jdbcType="VARCHAR" property="dirName" />
+    <result column="dir_sign" jdbcType="VARCHAR" property="dirSign" />
+    <result column="dir_mar_code" jdbcType="VARCHAR" property="dirMarCode" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    dir_id, dir_code, dir_name, dir_sign, dir_mar_code
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from gpms_major_direction
+    where dir_id = #{dirId,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from gpms_major_direction
+    where dir_code = #{dirCode,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.gpms.po.MajorDirection">
+    insert into gpms_major_direction (dir_id, dir_code, dir_name, 
+      dir_sign, dir_mar_code)
+    values (#{dirId,jdbcType=INTEGER}, #{dirCode,jdbcType=VARCHAR}, #{dirName,jdbcType=VARCHAR}, 
+      #{dirSign,jdbcType=VARCHAR}, #{dirMarCode,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.gpms.po.MajorDirection">
+    insert into gpms_major_direction
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="dirId != null">
+        dir_id,
+      </if>
+      <if test="dirCode != null">
+        dir_code,
+      </if>
+      <if test="dirName != null">
+        dir_name,
+      </if>
+      <if test="dirSign != null">
+        dir_sign,
+      </if>
+      <if test="dirMarCode != null">
+        dir_mar_code,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="dirId != null">
+        #{dirId,jdbcType=INTEGER},
+      </if>
+      <if test="dirCode != null">
+        #{dirCode,jdbcType=VARCHAR},
+      </if>
+      <if test="dirName != null">
+        #{dirName,jdbcType=VARCHAR},
+      </if>
+      <if test="dirSign != null">
+        #{dirSign,jdbcType=VARCHAR},
+      </if>
+      <if test="dirMarCode != null">
+        #{dirMarCode,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.gpms.po.MajorDirection">
+    update gpms_major_direction
+    <set>
+      <if test="dirCode != null">
+        dir_code = #{dirCode,jdbcType=VARCHAR},
+      </if>
+      <if test="dirName != null">
+        dir_name = #{dirName,jdbcType=VARCHAR},
+      </if>
+      <if test="dirSign != null">
+        dir_sign = #{dirSign,jdbcType=VARCHAR},
+      </if>
+      <if test="dirMarCode != null">
+        dir_mar_code = #{dirMarCode,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where dir_code = #{dirCode,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.gpms.po.MajorDirection">
+    update gpms_major_direction
+    set dir_code = #{dirCode,jdbcType=VARCHAR},
+      dir_name = #{dirName,jdbcType=VARCHAR},
+      dir_sign = #{dirSign,jdbcType=VARCHAR},
+      dir_mar_code = #{dirMarCode,jdbcType=VARCHAR}
+    where dir_id = #{dirId,jdbcType=INTEGER}
+  </update>
+</mapper>

@@ -1,0 +1,210 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gpms.mapper.ConfigMapper">
+	<resultMap id="BaseResultMap" type="com.gpms.po.Config">
+		<id column="conf_id" jdbcType="INTEGER" property="confId" />
+		<result column="conf_bize_type" jdbcType="VARCHAR" property="confBizeType" />
+		<result column="conf_stage" jdbcType="VARCHAR" property="confStage" />
+		<result column="conf_lasttime" jdbcType="TIMESTAMP" property="confLasttime" />
+		<result column="conf_operator" jdbcType="VARCHAR" property="confOperator" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		conf_id, conf_bize_type, conf_stage, conf_lasttime,
+		conf_operator
+	</sql>
+
+	<!-- 设置时间限制 -->
+	<insert id="setDeadline">
+		insert into gpms_config
+		(conf_bize_type, conf_stage,
+		conf_lasttime, conf_operator)
+		values ('0',
+		#{0,jdbcType=VARCHAR},
+		#{1,jdbcType=TIMESTAMP},
+		#{2,jdbcType=VARCHAR})
+	</insert>
+
+	<!-- 设置评论时间限制 -->
+	<insert id="setDeadlineOnComment">
+		insert into gpms_config
+		(conf_bize_type, conf_stage,
+		conf_lasttime, conf_operator)
+		values ('1',
+		#{0,jdbcType=VARCHAR},
+		#{1,jdbcType=TIMESTAMP},
+		#{2,jdbcType=VARCHAR})
+	</insert>
+	<!--  -->
+	<update id="changeDeadline">
+		update gpms_config
+		set conf_bize_type = "0",
+		conf_stage =
+		#{confStage,jdbcType=VARCHAR},
+		conf_lasttime =
+		#{confLasttime,jdbcType=TIMESTAMP},
+		conf_operator =
+		#{confOperator,jdbcType=VARCHAR}
+		where conf_id =
+		#{confId,jdbcType=INTEGER}
+	</update>
+	<!--  -->
+	<update id="changeDeadlineOnComment">
+		update gpms_config
+		set conf_bize_type = '1',
+		conf_stage =
+		#{confStage,jdbcType=VARCHAR},
+		conf_lasttime =
+		#{confLasttime,jdbcType=TIMESTAMP},
+		conf_operator =
+		#{confOperator,jdbcType=VARCHAR}
+		where conf_id =
+		#{confId,jdbcType=INTEGER}
+	</update>
+
+	<!-- 查询最后提交实习资料设置 -->
+	<select id="getDeadline" parameterType="java.lang.String"
+		resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from gpms_config
+		where conf_operator =
+		(select stu_tea_no from
+		gpms_user_students where stu_no = #{stuNo})
+		and
+		conf_stage = (select
+		stu_stage from
+		gpms_user_students where stu_no = #{stuNo})
+	</select>
+
+	<select id="getDeadlineByTeaNo" parameterType="java.lang.String"
+		resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from gpms_config
+		where conf_operator = #{teaNo}
+	</select>
+
+	<select id="getDeadlineOnCommentByStage" parameterType="java.lang.String"
+		resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from gpms_config
+		where 
+		conf_bize_type = '1'
+		and
+		conf_stage = #{stage}
+	</select>
+	<!-- 查询最后评分设置 -->
+	<select id="getDeadlineOnComment" parameterType="java.lang.String"
+		resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from gpms_config
+		where 
+		conf_bize_type = '1'
+	</select>
+
+	<!-- 查询最后评分设置 (条件：指导老师号) -->
+	<!-- <select id="getDeadlineOnCommentByTeaNo" parameterType="java.lang.String" 
+		resultMap="BaseResultMap"> select <include refid="Base_Column_List" /> from 
+		gpms_config where conf_stage = (select stu_stage from gpms_user_students 
+		where stu_no = (select stu_no from gpms_user_students where stu_tea_no = 
+		#{teaNo})) and conf_bize_type = '1' </select> -->
+
+	<!-- 查询最后评分设置 (条件：企业号) -->
+	<!-- <select id="getDeadlineOnComment" parameterType="java.lang.String" 
+		resultMap="BaseResultMap"> select <include refid="Base_Column_List" /> from 
+		gpms_config where conf_stage = #{} and conf_bize_type = '1' </select> -->
+
+	<!-- *************************************************************************************** -->
+	<select id="selectByPrimaryKey" parameterType="java.lang.Integer"
+		resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from gpms_config
+		where conf_id = #{confId,jdbcType=INTEGER}
+	</select>
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+		delete from
+		gpms_config
+		where conf_id = #{confId,jdbcType=INTEGER}
+	</delete>
+	<insert id="insert" parameterType="com.gpms.po.Config">
+		insert into gpms_config
+		(conf_id, conf_bize_type, conf_stage,
+		conf_lasttime, conf_operator)
+		values (#{confId,jdbcType=INTEGER}, #{confBizeType,jdbcType=VARCHAR},
+		#{confStage,jdbcType=VARCHAR},
+		#{confLasttime,jdbcType=TIMESTAMP},
+		#{confOperator,jdbcType=VARCHAR})
+	</insert>
+	<insert id="insertSelective" parameterType="com.gpms.po.Config">
+		insert into gpms_config
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="confId != null">
+				conf_id,
+			</if>
+			<if test="confBizeType != null">
+				conf_bize_type,
+			</if>
+			<if test="confStage != null">
+				conf_stage,
+			</if>
+			<if test="confLasttime != null">
+				conf_lasttime,
+			</if>
+			<if test="confOperator != null">
+				conf_operator,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="confId != null">
+				#{confId,jdbcType=INTEGER},
+			</if>
+			<if test="confBizeType != null">
+				#{confBizeType,jdbcType=VARCHAR},
+			</if>
+			<if test="confStage != null">
+				#{confStage,jdbcType=VARCHAR},
+			</if>
+			<if test="confLasttime != null">
+				#{confLasttime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="confOperator != null">
+				#{confOperator,jdbcType=VARCHAR},
+			</if>
+		</trim>
+	</insert>
+	<update id="updateByPrimaryKeySelective" parameterType="com.gpms.po.Config">
+		update gpms_config
+		<set>
+			<if test="confBizeType != null">
+				conf_bize_type = #{confBizeType,jdbcType=VARCHAR},
+			</if>
+			<if test="confStage != null">
+				conf_stage = #{confStage,jdbcType=VARCHAR},
+			</if>
+			<if test="confLasttime != null">
+				conf_lasttime = #{confLasttime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="confOperator != null">
+				conf_operator = #{confOperator,jdbcType=VARCHAR},
+			</if>
+		</set>
+		where conf_id = #{confId,jdbcType=INTEGER}
+	</update>
+	<update id="updateByPrimaryKey" parameterType="com.gpms.po.Config">
+		update gpms_config
+		set conf_bize_type = #{confBizeType,jdbcType=VARCHAR},
+		conf_stage =
+		#{confStage,jdbcType=VARCHAR},
+		conf_lasttime =
+		#{confLasttime,jdbcType=TIMESTAMP},
+		conf_operator =
+		#{confOperator,jdbcType=VARCHAR}
+		where conf_id =
+		#{confId,jdbcType=INTEGER}
+	</update>
+
+
+</mapper>

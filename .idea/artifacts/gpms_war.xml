@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="war" name="gpms:war">
+    <output-path>$PROJECT_DIR$/out/artifacts/gpms_war</output-path>
+    <root id="archive" name="gpms_war.war">
+      <element id="artifact" artifact-name="gpms:war exploded" />
+    </root>
+  </artifact>
+</component>

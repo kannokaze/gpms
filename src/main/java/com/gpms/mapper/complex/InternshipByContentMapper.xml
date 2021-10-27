@@ -1,0 +1,213 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.gpms.mapper.complex.InternshipByContentMapper">
+	<!-- 返回结果预设Map（单表） -->
+	<resultMap id="BaseResultMap" type="com.gpms.po.complex.Internship">
+		<!-- 表Content字段 -->
+		<id column="lc_id" property="lcId" jdbcType="INTEGER" />
+		<result column="lc_name" property="lcName" jdbcType="VARCHAR" />
+		<result column="lc_content" property="lcContent" jdbcType="VARCHAR" />
+		<result column="lc_selfcomment" property="lcSelfcomment" jdbcType="VARCHAR" />
+		<result column="lc_stu_no" property="lcStuNo" jdbcType="VARCHAR" />
+	</resultMap>
+
+
+	<!-- 返回结果预设Map （多表） -->
+	<resultMap id="BaseResultMap1" type="com.gpms.po.complex.InternshipByContent">
+		<!-- 表Content字段 -->
+		<id column="lc_id" property="lcId" jdbcType="INTEGER" />
+		<result column="lc_name" property="lcName" jdbcType="VARCHAR" />
+		<result column="lc_content" property="lcContent" jdbcType="VARCHAR" />
+		<result column="lc_selfcomment" property="lcSelfcomment" jdbcType="VARCHAR" />
+		<result column="lc_stu_no" property="lcStuNo" jdbcType="VARCHAR" />
+
+		<!-- 表Project字段 -->
+		<collection property="projectList" ofType="com.gpms.po.Project">
+			<id column="pro_id" property="proId" jdbcType="INTEGER" />
+			<result column="pro_name" property="proName" jdbcType="VARCHAR" />
+			<result column="pro_sign" property="proSign" jdbcType="VARCHAR" />
+			<result column="pro_starttime" property="proStarttime"
+				jdbcType="TIMESTAMP" />
+			<result column="pro_endtime" property="proEndtime" jdbcType="TIMESTAMP" />
+			<result column="pro_con_id" property="proConId" jdbcType="INTEGER" />
+			<result column="pro_com_acc" property="proComAcc" jdbcType="VARCHAR" />
+
+			<!-- 表Team字段 -->
+			<collection property="team" ofType="com.gpms.po.Team">
+				<id column="team_id" jdbcType="INTEGER" property="teamId" />
+				<result column="team_code" jdbcType="VARCHAR" property="teamCode" />
+				<result column="team_name" jdbcType="VARCHAR" property="teamName" />
+				<result column="team_sign" jdbcType="VARCHAR" property="teamSign" />
+				<result column="team_pro_id" jdbcType="INTEGER" property="teamProId" />
+				<!-- 表TeamMember字段 -->
+				<collection property="teamMemberList" ofType="com.gpms.po.TeamMember">
+					<id column="tm_id" jdbcType="INTEGER" property="tmId" />
+					<result column="tm_duty" jdbcType="VARCHAR" property="tmDuty" />
+					<result column="tm_name" jdbcType="VARCHAR" property="tmName" />
+					<result column="tm_team_code" jdbcType="VARCHAR" property="tmTeamCode" />
+				</collection>
+			</collection>
+			<!-- 表Progress字段 -->
+			<collection property="progressList" ofType="com.gpms.po.Progress">
+				<id column="prog_id" property="progId" jdbcType="INTEGER" />
+				<result column="prog_name" property="progName" jdbcType="VARCHAR" />
+				<result column="prog_duty" property="progDuty" jdbcType="VARCHAR" />
+				<result column="prog_starttime" property="progStarttime"
+					jdbcType="TIMESTAMP" />
+				<result column="prog_endtime" property="progEndtime"
+					jdbcType="TIMESTAMP" />
+				<result column="prog_pro_id" property="progProId" jdbcType="INTEGER" />
+			</collection>
+		</collection>
+	</resultMap>
+
+	<!-- 预设查询字段 -->
+	<sql id="Base_Column_List">
+		lc_id, lc_name, lc_content, lc_stu_no,lc_selfcomment
+	</sql>
+
+	<!-- 关联表查询字段 -->
+	<sql id="Column_List">
+		gpms_internship_content.lc_id,
+		gpms_internship_content.lc_name,
+		gpms_internship_content.lc_content,
+		gpms_internship_content.lc_selfcomment,
+		gpms_internship_content.lc_stu_no,
+
+		gpms_internship_project.pro_id,
+		gpms_internship_project.pro_name,
+		gpms_internship_project.pro_sign,
+		gpms_internship_project.pro_starttime,
+		gpms_internship_project.pro_endtime,
+		gpms_internship_project.pro_con_id,
+		gpms_internship_project.pro_com_acc,
+
+		gpms_internship_progress.prog_id,
+		gpms_internship_progress.prog_name,
+		gpms_internship_progress.prog_duty,
+		gpms_internship_progress.prog_starttime,
+		gpms_internship_progress.prog_endtime,
+		gpms_internship_progress.prog_pro_id,
+		
+		gpms_internship_team.team_id, 
+		gpms_internship_team.team_code, 
+		gpms_internship_team.team_name, 
+		gpms_internship_team.team_sign, 
+		gpms_internship_team.team_pro_id,
+		
+		gpms_internship_team_member.tm_id, 
+		gpms_internship_team_member.tm_duty, 
+		gpms_internship_team_member.tm_name, 
+		gpms_internship_team_member.tm_team_code
+	</sql>
+
+	<sql id="Column_List_Content_Project">
+		gpms_internship_content.lc_id,
+		gpms_internship_content.lc_name,
+		gpms_internship_content.lc_content,
+		gpms_internship_content.lc_selfcomment,
+		gpms_internship_content.lc_stu_no,
+
+		gpms_internship_project.pro_id,
+		gpms_internship_project.pro_name,
+		gpms_internship_project.pro_sign,
+		gpms_internship_project.pro_starttime,
+		gpms_internship_project.pro_endtime,
+		gpms_internship_project.pro_con_id,
+		gpms_internship_project.pro_com_acc
+	</sql>
+
+	<sql id="Column_List_Progress">
+		gpms_internship_progress.prog_id,
+		gpms_internship_progress.prog_name,
+		gpms_internship_progress.prog_duty,
+		gpms_internship_progress.prog_starttime,
+		gpms_internship_progress.prog_endtime,
+		gpms_internship_progress.prog_pro_id
+	</sql>
+
+	<!-- 查询实习内容、实习项目、实习团队及成员、实习进展 (条件：学号) -->
+	<select id="selectInternshipByStuNo" resultMap="BaseResultMap1">
+		select
+		<include refid="Column_List" />
+		from
+		<!-- gpms_internship_content,gpms_internship_project where gpms_internship_content.lc_id 
+			= gpms_internship_project.pro_con_id and gpms_internship_project.pro_id = 
+			gpms_internship_progress.prog_id and gpms_internship_content.lc_stu_id = 
+			gpms_internship_progress.prog_stu_id and gpms_internship_content.lc_stu_id 
+			= #{stuNo} -->
+
+		(gpms_internship_content left join gpms_internship_project on
+		gpms_internship_content.lc_id =
+		gpms_internship_project.pro_con_id)
+
+		left join gpms_internship_progress on gpms_internship_project.pro_id =
+		gpms_internship_progress.prog_pro_id
+	
+		left join gpms_internship_team on gpms_internship_team.team_pro_id =
+		gpms_internship_project.pro_id
+		
+		left join gpms_internship_team_member on gpms_internship_team_member.tm_team_code =
+		gpms_internship_team.team_code
+		
+		where
+		gpms_internship_content.lc_stu_no = #{stuNo}
+	</select>
+
+	<!-- 查询实习内容、实习项目、实习进展 (条件：指导老师号) -->
+	<select id="selectInternshipByTeaNo" resultMap="BaseResultMap1">
+		select
+		<include refid="Column_List" />
+		from
+
+		((gpms_internship_content left join gpms_internship_project on
+		gpms_internship_content.lc_id =
+		gpms_internship_project.pro_con_id)
+
+		left join gpms_internship_progress on gpms_internship_project.pro_id =
+		gpms_internship_progress.prog_pro_id)
+
+		left join gpms_user_students on
+		gpms_user_students.stu_no =
+		gpms_internship_content.lc_stu_no
+
+		where
+		gpms_user_students.stu_tea_no = #{teaNo}
+	</select>
+
+
+	<!-- 查询实习内容、实习项目、实习进展 (条件：企业号) -->
+	<select id="selectInternshipByComAccount" resultMap="BaseResultMap1">
+		select
+		<include refid="Column_List" />
+		from
+		((gpms_internship_content left join gpms_internship_project on
+		gpms_internship_content.lc_id =
+		gpms_internship_project.pro_con_id)
+
+		left join gpms_internship_progress on gpms_internship_project.pro_id =
+		gpms_internship_progress.prog_pro_id)
+
+		left join gpms_rela_stu_com on
+		gpms_rela_stu_com.sc_stu_no =
+		gpms_internship_content.lc_stu_no
+
+		where
+		gpms_rela_stu_com.sc_com_acc = #{comAccount}
+	</select>
+
+	<!-- 查询实习内容（条件：学号） -->
+	<select id="searchContentByStuNo" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		*
+		from
+		gpms_internship_content
+
+	</select>
+
+
+
+	<!-- *********************************************************************** -->
+
+</mapper>

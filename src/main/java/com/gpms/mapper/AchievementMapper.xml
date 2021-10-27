@@ -1,0 +1,177 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gpms.mapper.AchievementMapper">
+	<resultMap id="BaseResultMap" type="com.gpms.po.Achievement">
+		<id column="ach_id" jdbcType="INTEGER" property="achId" />
+		<result column="ach_tea_comment" jdbcType="VARCHAR" property="achTeaComment" />
+		<result column="ach_com_comment" jdbcType="VARCHAR" property="achComComment" />
+		<result column="ach_tea_score" jdbcType="DECIMAL" property="achTeaScore" />
+		<result column="ach_com_score" jdbcType="DECIMAL" property="achComScore" />
+		<result column="ach_last_score" jdbcType="DECIMAL" property="achLastScore" />
+		<result column="ach_status" jdbcType="VARCHAR" property="achStatus" />
+		<result column="ach_stu_no" jdbcType="INTEGER" property="achStuNo" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		ach_id, ach_tea_comment, ach_com_comment, ach_tea_score,
+		ach_com_score,
+		ach_last_score,
+		ach_status, ach_stu_no
+	</sql>
+	<!-- 查询成绩 -->
+	<select id="selectByStuNo" parameterType="java.lang.String"
+		resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from gpms_internship_achievement
+		where ach_stu_no =
+		#{stuNo}
+	</select>
+	
+	<update id="gradeStudentByTeaNo">
+		update
+		gpms_internship_achievement
+		set ach_tea_comment =
+		#{3},
+		ach_tea_score =
+		#{2}
+		where ach_stu_no = #{1}
+	</update>
+	
+		
+	<update id="gradeStudentByComAcc">
+		update
+		gpms_internship_achievement
+		set ach_com_comment =
+		#{3},
+		ach_com_score =
+		#{2}
+		where ach_stu_no = #{1}
+	</update>
+	<!-- ********************************************************** -->
+	<select id="selectByPrimaryKey" parameterType="java.lang.Integer"
+		resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from gpms_internship_achievement
+		where ach_id =
+		#{achId,jdbcType=INTEGER}
+	</select>
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+		delete from
+		gpms_internship_achievement
+		where ach_id = #{achId,jdbcType=INTEGER}
+	</delete>
+	<insert id="insert" parameterType="com.gpms.po.Achievement">
+		insert into
+		gpms_internship_achievement (ach_id, ach_tea_comment,
+		ach_com_comment,
+		ach_tea_score, ach_com_score, ach_last_score,
+		ach_status, ach_stu_no)
+		values (#{achId,jdbcType=INTEGER}, #{achTeaComment,jdbcType=VARCHAR},
+		#{achComComment,jdbcType=VARCHAR},
+		#{achTeaScore,jdbcType=DECIMAL},
+		#{achComScore,jdbcType=DECIMAL}, #{achLastScore,jdbcType=DECIMAL},
+		#{achStatus,jdbcType=VARCHAR}, #{achStuNo,jdbcType=INTEGER})
+	</insert>
+	<insert id="insertSelective" parameterType="com.gpms.po.Achievement">
+		insert into gpms_internship_achievement
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="achId != null">
+				ach_id,
+			</if>
+			<if test="achTeaComment != null">
+				ach_tea_comment,
+			</if>
+			<if test="achComComment != null">
+				ach_com_comment,
+			</if>
+			<if test="achTeaScore != null">
+				ach_tea_score,
+			</if>
+			<if test="achComScore != null">
+				ach_com_score,
+			</if>
+			<if test="achLastScore != null">
+				ach_last_score,
+			</if>
+			<if test="achStatus != null">
+				ach_status,
+			</if>
+			<if test="achStuNo != null">
+				ach_stu_no,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="achId != null">
+				#{achId,jdbcType=INTEGER},
+			</if>
+			<if test="achTeaComment != null">
+				#{achTeaComment,jdbcType=VARCHAR},
+			</if>
+			<if test="achComComment != null">
+				#{achComComment,jdbcType=VARCHAR},
+			</if>
+			<if test="achTeaScore != null">
+				#{achTeaScore,jdbcType=DECIMAL},
+			</if>
+			<if test="achComScore != null">
+				#{achComScore,jdbcType=DECIMAL},
+			</if>
+			<if test="achLastScore != null">
+				#{achLastScore,jdbcType=DECIMAL},
+			</if>
+			<if test="achStatus != null">
+				#{achStatus,jdbcType=VARCHAR},
+			</if>
+			<if test="achStuNo != null">
+				#{achStuNo,jdbcType=INTEGER},
+			</if>
+		</trim>
+	</insert>
+	<update id="updateByPrimaryKeySelective" parameterType="com.gpms.po.Achievement">
+		update gpms_internship_achievement
+		<set>
+			<if test="achTeaComment != null">
+				ach_tea_comment = #{achTeaComment,jdbcType=VARCHAR},
+			</if>
+			<if test="achComComment != null">
+				ach_com_comment = #{achComComment,jdbcType=VARCHAR},
+			</if>
+			<if test="achTeaScore != null">
+				ach_tea_score = #{achTeaScore,jdbcType=DECIMAL},
+			</if>
+			<if test="achComScore != null">
+				ach_com_score = #{achComScore,jdbcType=DECIMAL},
+			</if>
+			<if test="achLastScore != null">
+				ach_last_score = #{achLastScore,jdbcType=DECIMAL},
+			</if>
+			<if test="achStatus != null">
+				ach_status = #{achStatus,jdbcType=VARCHAR},
+			</if>
+			<if test="achStuNo != null">
+				ach_stu_no = #{achStuNo,jdbcType=INTEGER},
+			</if>
+		</set>
+		where ach_id = #{achId,jdbcType=INTEGER}
+	</update>
+	<update id="updateByPrimaryKey" parameterType="com.gpms.po.Achievement">
+		update
+		gpms_internship_achievement
+		set ach_tea_comment =
+		#{achTeaComment,jdbcType=VARCHAR},
+		ach_com_comment =
+		#{achComComment,jdbcType=VARCHAR},
+		ach_tea_score =
+		#{achTeaScore,jdbcType=DECIMAL},
+		ach_com_score =
+		#{achComScore,jdbcType=DECIMAL},
+		ach_last_score =
+		#{achLastScore,jdbcType=DECIMAL},
+		ach_status =
+		#{achStatus,jdbcType=VARCHAR},
+		ach_stu_no =
+		#{achStuNo,jdbcType=INTEGER}
+		where ach_id = #{achId,jdbcType=INTEGER}
+	</update>
+</mapper>

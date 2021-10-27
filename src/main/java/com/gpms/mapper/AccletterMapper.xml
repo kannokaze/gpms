@@ -1,0 +1,250 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gpms.mapper.AccletterMapper">
+	<resultMap id="BaseResultMap" type="com.gpms.po.Accletter">
+		<id column="lal_id" jdbcType="INTEGER" property="lalId" />
+		<result column="lal_original_name" jdbcType="VARCHAR" property="lalOriginalName" />
+		<result column="lal_new_name" jdbcType="VARCHAR" property="lalNewName" />
+		<result column="lal_path" jdbcType="VARCHAR" property="lalPath" />
+		<result column="lal_relative_path" jdbcType="VARCHAR" property="lalRelativePath" />
+		<result column="lal_size" jdbcType="VARCHAR" property="lalSize" />
+		<result column="lal_type" jdbcType="VARCHAR" property="lalType" />
+		<result column="lal_updatetime" jdbcType="TIMESTAMP" property="lalUpdatetime" />
+		<result column="lal_del_flag" jdbcType="BIT" property="lalDelFlag" />
+		<result column="lal_stu_no" jdbcType="VARCHAR" property="lalStuNo" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		lal_id, lal_original_name, lal_new_name, lal_path,
+		lal_relative_path,
+		lal_size, lal_type,
+		lal_updatetime, lal_del_flag,
+		lal_stu_no
+	</sql>
+
+	<!-- 查询 -->
+	<select id="selectByStuNo" parameterType="java.lang.String"
+		resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from gpms_internship_accletter
+		where lal_stu_no = #{stuNo}
+	</select>
+	<!-- 新建 -->
+	<insert id="insertAccltter" parameterType="com.gpms.po.Accletter">
+		insert into gpms_internship_accletter
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="lalId != null">
+				lal_id,
+			</if>
+			<if test="lalOriginalName != null">
+				lal_original_name,
+			</if>
+			<if test="lalNewName != null">
+				lal_new_name,
+			</if>
+			<if test="lalPath != null">
+				lal_path,
+			</if>
+			<if test="lalRelativePath != null">
+				lal_relative_path,
+			</if>
+			<if test="lalSize != null">
+				lal_size,
+			</if>
+			<if test="lalType != null">
+				lal_type,
+			</if>
+			<if test="lalUpdatetime != null">
+				lal_updatetime,
+			</if>
+			<if test="lalDelFlag != null">
+				lal_del_flag,
+			</if>
+			<if test="lalStuNo != null">
+				lal_stu_no,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="lalId != null">
+				#{lalId,jdbcType=INTEGER},
+			</if>
+			<if test="lalOriginalName != null">
+				#{lalOriginalName,jdbcType=VARCHAR},
+			</if>
+			<if test="lalNewName != null">
+				#{lalNewName,jdbcType=VARCHAR},
+			</if>
+			<if test="lalPath != null">
+				#{lalPath,jdbcType=VARCHAR},
+			</if>
+			<if test="lalRelativePath != null">
+				#{lalRelativePath,jdbcType=VARCHAR},
+			</if>
+			<if test="lalSize != null">
+				#{lalSize,jdbcType=VARCHAR},
+			</if>
+			<if test="lalType != null">
+				#{lalType,jdbcType=VARCHAR},
+			</if>
+			<if test="lalUpdatetime != null">
+				#{lalUpdatetime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="lalDelFlag != null">
+				#{lalDelFlag,jdbcType=BIT},
+			</if>
+			<if test="lalStuNo != null">
+				#{lalStuNo,jdbcType=VARCHAR},
+			</if>
+		</trim>
+	</insert>
+
+	<!-- ********************************************************* -->
+	<select id="selectByPrimaryKey" parameterType="java.lang.Integer"
+		resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from gpms_internship_accletter
+		where lal_id = #{lalId,jdbcType=INTEGER}
+	</select>
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+		delete from
+		gpms_internship_accletter
+		where lal_id = #{lalId,jdbcType=INTEGER}
+	</delete>
+	<insert id="insert" parameterType="com.gpms.po.Accletter">
+		insert into
+		gpms_internship_accletter (lal_id, lal_original_name,
+		lal_new_name,
+		lal_path, lal_relative_path, lal_size,
+		lal_type, lal_updatetime,
+		lal_del_flag,
+		lal_stu_no)
+		values (#{lalId,jdbcType=INTEGER},
+		#{lalOriginalName,jdbcType=VARCHAR},
+		#{lalNewName,jdbcType=VARCHAR},
+		#{lalPath,jdbcType=VARCHAR}, #{lalRelativePath,jdbcType=VARCHAR},
+		#{lalSize,jdbcType=VARCHAR},
+		#{lalType,jdbcType=VARCHAR},
+		#{lalUpdatetime,jdbcType=TIMESTAMP},
+		#{lalDelFlag,jdbcType=BIT},
+		#{lalStuNo,jdbcType=VARCHAR})
+	</insert>
+	<insert id="insertSelective" parameterType="com.gpms.po.Accletter">
+		insert into gpms_internship_accletter
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="lalId != null">
+				lal_id,
+			</if>
+			<if test="lalOriginalName != null">
+				lal_original_name,
+			</if>
+			<if test="lalNewName != null">
+				lal_new_name,
+			</if>
+			<if test="lalPath != null">
+				lal_path,
+			</if>
+			<if test="lalRelativePath != null">
+				lal_relative_path,
+			</if>
+			<if test="lalSize != null">
+				lal_size,
+			</if>
+			<if test="lalType != null">
+				lal_type,
+			</if>
+			<if test="lalUpdatetime != null">
+				lal_updatetime,
+			</if>
+			<if test="lalDelFlag != null">
+				lal_del_flag,
+			</if>
+			<if test="lalStuNo != null">
+				lal_stu_no,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="lalId != null">
+				#{lalId,jdbcType=INTEGER},
+			</if>
+			<if test="lalOriginalName != null">
+				#{lalOriginalName,jdbcType=VARCHAR},
+			</if>
+			<if test="lalNewName != null">
+				#{lalNewName,jdbcType=VARCHAR},
+			</if>
+			<if test="lalPath != null">
+				#{lalPath,jdbcType=VARCHAR},
+			</if>
+			<if test="lalRelativePath != null">
+				#{lalRelativePath,jdbcType=VARCHAR},
+			</if>
+			<if test="lalSize != null">
+				#{lalSize,jdbcType=VARCHAR},
+			</if>
+			<if test="lalType != null">
+				#{lalType,jdbcType=VARCHAR},
+			</if>
+			<if test="lalUpdatetime != null">
+				#{lalUpdatetime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="lalDelFlag != null">
+				#{lalDelFlag,jdbcType=BIT},
+			</if>
+			<if test="lalStuNo != null">
+				#{lalStuNo,jdbcType=VARCHAR},
+			</if>
+		</trim>
+	</insert>
+	<update id="updateByPrimaryKeySelective" parameterType="com.gpms.po.Accletter">
+		update gpms_internship_accletter
+		<set>
+			<if test="lalOriginalName != null">
+				lal_original_name = #{lalOriginalName,jdbcType=VARCHAR},
+			</if>
+			<if test="lalNewName != null">
+				lal_new_name = #{lalNewName,jdbcType=VARCHAR},
+			</if>
+			<if test="lalPath != null">
+				lal_path = #{lalPath,jdbcType=VARCHAR},
+			</if>
+			<if test="lalRelativePath != null">
+				lal_relative_path = #{lalRelativePath,jdbcType=VARCHAR},
+			</if>
+			<if test="lalSize != null">
+				lal_size = #{lalSize,jdbcType=VARCHAR},
+			</if>
+			<if test="lalType != null">
+				lal_type = #{lalType,jdbcType=VARCHAR},
+			</if>
+			<if test="lalUpdatetime != null">
+				lal_updatetime = #{lalUpdatetime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="lalDelFlag != null">
+				lal_del_flag = #{lalDelFlag,jdbcType=BIT},
+			</if>
+			<if test="lalStuNo != null">
+				lal_stu_no = #{lalStuNo,jdbcType=VARCHAR},
+			</if>
+		</set>
+		where lal_id = #{lalId,jdbcType=INTEGER}
+	</update>
+	<update id="updateByPrimaryKey" parameterType="com.gpms.po.Accletter">
+		update
+		gpms_internship_accletter
+		set lal_original_name =
+		#{lalOriginalName,jdbcType=VARCHAR},
+		lal_new_name =
+		#{lalNewName,jdbcType=VARCHAR},
+		lal_path = #{lalPath,jdbcType=VARCHAR},
+		lal_relative_path = #{lalRelativePath,jdbcType=VARCHAR},
+		lal_size =
+		#{lalSize,jdbcType=VARCHAR},
+		lal_type = #{lalType,jdbcType=VARCHAR},
+		lal_updatetime = #{lalUpdatetime,jdbcType=TIMESTAMP},
+		lal_del_flag =
+		#{lalDelFlag,jdbcType=BIT},
+		lal_stu_no = #{lalStuNo,jdbcType=VARCHAR}
+		where lal_id = #{lalId,jdbcType=INTEGER}
+	</update>
+</mapper>

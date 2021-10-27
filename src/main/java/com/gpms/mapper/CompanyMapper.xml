@@ -1,0 +1,279 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gpms.mapper.CompanyMapper">
+	<resultMap id="BaseResultMap" type="com.gpms.po.Company">
+		<id column="com_id" jdbcType="INTEGER" property="comId" />
+		<result column="com_account" jdbcType="VARCHAR" property="comAccount" />
+		<result column="com_name" jdbcType="VARCHAR" property="comName" />
+		<result column="com_password" jdbcType="VARCHAR" property="comPassword" />
+		<result column="com_address" jdbcType="VARCHAR" property="comAddress" />
+		<result column="com_trade" jdbcType="VARCHAR" property="comTrade" />
+		<result column="com_manager" jdbcType="VARCHAR" property="comManager" />
+		<result column="com_phone" jdbcType="CHAR" property="comPhone" />
+		<result column="com_email" jdbcType="VARCHAR" property="comEmail" />
+		<result column="com_registime" jdbcType="TIMESTAMP" property="comRegistime" />
+		<result column="com_state" jdbcType="CHAR" property="comState" />
+		<result column="sc_state" jdbcType="CHAR" property="scState" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		com_id, com_account, com_name, com_password, com_address,
+		com_trade,
+		com_manager,
+		com_phone, com_email, com_registime, com_state
+	</sql>
+
+	<!-- 查询公司（条件：公司账户） -->
+	<select id="selectByAccount" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from gpms_user_companies
+		where com_account = #{comAccount}
+	</select>
+
+	<select id="selectByAccountAndPwd" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from gpms_user_companies
+		where com_account = #{0}
+		and
+		com_password = #{1}
+		and
+		com_state = "0"
+	</select>
+
+	<!-- 查询全部公司 -->
+	<select id="selectAll" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from gpms_user_companies
+		<!-- <trim prefix="WHERE" prefixOverrides="OR"> <if test="company.comName 
+			!= null"> com_name like concat('%',#{company.comName},'%') </if> <if test="company.comAccount 
+			!= null"> or com_account like concat('%',#{company.comAccount},'%') </if> 
+			</trim> -->
+	</select>
+	<!-- 按条件查询全部公司 -->
+	<select id="selectAllByKey" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from gpms_user_companies
+		<trim prefix="WHERE" prefixOverrides="OR">
+			<if test="comName 
+			!= null"> com_name like concat('%',#{comName},'%') </if>
+			<if test="comAccount 
+			!= null"> or com_account like
+				concat('%',#{comAccount},'%') </if>
+			<if test="comManager 
+			!= null"> or com_manager like
+				concat('%',#{comManager},'%') </if>
+			<if test="comState
+			!= null"> or com_state = #{comState}</if>
+		</trim>
+	</select>
+
+	<!-- 同意进入 -->
+	<update id="agreeCompany">
+		update gpms_user_companies
+		set
+		com_state = '0'
+		where
+		com_account =
+		#{account}
+	</update>
+
+	<update id="updateCompanyInfoByComAcc" parameterType="com.gpms.po.Company">
+		update gpms_user_companies
+		<set>
+			<if test="comAccount != null">
+				com_account = #{comAccount,jdbcType=VARCHAR},
+			</if>
+			<if test="comName != null">
+				com_name = #{comName,jdbcType=VARCHAR},
+			</if>
+			<if test="comPassword != null">
+				com_password = #{comPassword,jdbcType=VARCHAR},
+			</if>
+			<if test="comAddress != null">
+				com_address = #{comAddress,jdbcType=VARCHAR},
+			</if>
+			<if test="comTrade != null">
+				com_trade = #{comTrade,jdbcType=VARCHAR},
+			</if>
+			<if test="comManager != null">
+				com_manager = #{comManager,jdbcType=VARCHAR},
+			</if>
+			<if test="comPhone != null">
+				com_phone = #{comPhone,jdbcType=CHAR},
+			</if>
+			<if test="comEmail != null">
+				com_email = #{comEmail,jdbcType=VARCHAR},
+			</if>
+			<if test="comRegistime != null">
+				com_registime = #{comRegistime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="comState != null">
+				com_state = #{comState,jdbcType=CHAR},
+			</if>
+		</set>
+		where com_account = #{comAccount,jdbcType=INTEGER}
+	</update>
+	<!-- ******************************************************************** -->
+	<select id="selectByPrimaryKey" parameterType="java.lang.Integer"
+		resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from gpms_user_companies
+		where com_id = #{comId,jdbcType=INTEGER}
+	</select>
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+		delete from
+		gpms_user_companies
+		where com_id = #{comId,jdbcType=INTEGER}
+	</delete>
+	<insert id="insert" parameterType="com.gpms.po.Company">
+		insert into
+		gpms_user_companies (com_id, com_account, com_name,
+		com_password,
+		com_address, com_trade,
+		com_manager, com_phone, com_email,
+		com_registime, com_state)
+		values (#{comId,jdbcType=INTEGER},
+		#{comAccount,jdbcType=VARCHAR},
+		#{comName,jdbcType=VARCHAR},
+		#{comPassword,jdbcType=VARCHAR}, #{comAddress,jdbcType=VARCHAR},
+		#{comTrade,jdbcType=VARCHAR},
+		#{comManager,jdbcType=VARCHAR},
+		#{comPhone,jdbcType=CHAR},
+		#{comEmail,jdbcType=VARCHAR},
+		#{comRegistime,jdbcType=TIMESTAMP}, #{comState,jdbcType=CHAR})
+	</insert>
+	<insert id="insertSelective" parameterType="com.gpms.po.Company">
+		insert into gpms_user_companies
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="comId != null">
+				com_id,
+			</if>
+			<if test="comAccount != null">
+				com_account,
+			</if>
+			<if test="comName != null">
+				com_name,
+			</if>
+			<if test="comPassword != null">
+				com_password,
+			</if>
+			<if test="comAddress != null">
+				com_address,
+			</if>
+			<if test="comTrade != null">
+				com_trade,
+			</if>
+			<if test="comManager != null">
+				com_manager,
+			</if>
+			<if test="comPhone != null">
+				com_phone,
+			</if>
+			<if test="comEmail != null">
+				com_email,
+			</if>
+			<if test="comRegistime != null">
+				com_registime,
+			</if>
+			<if test="comState != null">
+				com_state,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="comId != null">
+				#{comId,jdbcType=INTEGER},
+			</if>
+			<if test="comAccount != null">
+				#{comAccount,jdbcType=VARCHAR},
+			</if>
+			<if test="comName != null">
+				#{comName,jdbcType=VARCHAR},
+			</if>
+			<if test="comPassword != null">
+				#{comPassword,jdbcType=VARCHAR},
+			</if>
+			<if test="comAddress != null">
+				#{comAddress,jdbcType=VARCHAR},
+			</if>
+			<if test="comTrade != null">
+				#{comTrade,jdbcType=VARCHAR},
+			</if>
+			<if test="comManager != null">
+				#{comManager,jdbcType=VARCHAR},
+			</if>
+			<if test="comPhone != null">
+				#{comPhone,jdbcType=CHAR},
+			</if>
+			<if test="comEmail != null">
+				#{comEmail,jdbcType=VARCHAR},
+			</if>
+			<if test="comRegistime != null">
+				#{comRegistime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="comState != null">
+				#{comState,jdbcType=CHAR},
+			</if>
+		</trim>
+	</insert>
+	<update id="updateByPrimaryKeySelective" parameterType="com.gpms.po.Company">
+		update gpms_user_companies
+		<set>
+			<if test="comAccount != null">
+				com_account = #{comAccount,jdbcType=VARCHAR},
+			</if>
+			<if test="comName != null">
+				com_name = #{comName,jdbcType=VARCHAR},
+			</if>
+			<if test="comPassword != null">
+				com_password = #{comPassword,jdbcType=VARCHAR},
+			</if>
+			<if test="comAddress != null">
+				com_address = #{comAddress,jdbcType=VARCHAR},
+			</if>
+			<if test="comTrade != null">
+				com_trade = #{comTrade,jdbcType=VARCHAR},
+			</if>
+			<if test="comManager != null">
+				com_manager = #{comManager,jdbcType=VARCHAR},
+			</if>
+			<if test="comPhone != null">
+				com_phone = #{comPhone,jdbcType=CHAR},
+			</if>
+			<if test="comEmail != null">
+				com_email = #{comEmail,jdbcType=VARCHAR},
+			</if>
+			<if test="comRegistime != null">
+				com_registime = #{comRegistime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="comState != null">
+				com_state = #{comState,jdbcType=CHAR},
+			</if>
+		</set>
+		where com_id = #{comId,jdbcType=INTEGER}
+	</update>
+	<update id="updateByPrimaryKey" parameterType="com.gpms.po.Company">
+		update
+		gpms_user_companies
+		set com_account = #{comAccount,jdbcType=VARCHAR},
+		com_name = #{comName,jdbcType=VARCHAR},
+		com_password =
+		#{comPassword,jdbcType=VARCHAR},
+		com_address =
+		#{comAddress,jdbcType=VARCHAR},
+		com_trade =
+		#{comTrade,jdbcType=VARCHAR},
+		com_manager =
+		#{comManager,jdbcType=VARCHAR},
+		com_phone = #{comPhone,jdbcType=CHAR},
+		com_email = #{comEmail,jdbcType=VARCHAR},
+		com_registime =
+		#{comRegistime,jdbcType=TIMESTAMP},
+		com_state =
+		#{comState,jdbcType=CHAR}
+		where com_id = #{comId,jdbcType=INTEGER}
+	</update>
+</mapper>

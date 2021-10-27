@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.gpms.mapper.ContentMapper">
+	<resultMap id="BaseResultMap" type="com.gpms.po.Content">
+		<id column="lc_id" property="lcId" jdbcType="INTEGER" />
+		<result column="lc_name" property="lcName" jdbcType="VARCHAR" />
+		<result column="lc_content" property="lcContent" jdbcType="VARCHAR" />
+		<result column="lc_selfcomment" property="lcSelfcomment"
+			jdbcType="VARCHAR" />
+		<result column="lc_stu_no" property="lcStuNo" jdbcType="VARCHAR" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		lc_id, lc_name, lc_content, lc_stu_no,lc_selfcomment
+	</sql>
+
+	<update id="updateByPrimaryByStuNo" parameterType="com.gpms.po.Content">
+		update gpms_internship_content
+		<set>
+			<if test="lcName != null">
+				lc_name = #{lcName,jdbcType=VARCHAR},
+			</if>
+			<if test="lcContent != null">
+				lc_content = #{lcContent,jdbcType=VARCHAR},
+			</if>
+			<if test="lcSelfcomment != null">
+				lc_selfcomment = #{lcSelfcomment,jdbcType=VARCHAR},
+			</if>
+			<if test="lcStuNo != null">
+				lc_stu_no = #{lcStuNo,jdbcType=VARCHAR},
+			</if>
+
+
+		</set>
+		where lc_stu_no = #{lcStuNo,jdbcType=INTEGER}
+	</update>
+
+	<!-- ************************************************************* -->
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap"
+		parameterType="java.lang.Integer">
+		select
+		<include refid="Base_Column_List" />
+		from gpms_internship_content
+		where lc_id = #{lcId,jdbcType=INTEGER}
+	</select>
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+		delete from
+		gpms_internship_content
+		where lc_id = #{lcId,jdbcType=INTEGER}
+	</delete>
+	<insert id="insert" parameterType="com.gpms.po.Content">
+		insert into
+		gpms_internship_content (lc_id, lc_name, lc_content,
+		lc_stu_no)
+		values
+		(#{lcId,jdbcType=INTEGER}, #{lcName,jdbcType=VARCHAR},
+		#{lcContent,jdbcType=VARCHAR},
+		#{lcStuNo,jdbcType=VARCHAR})
+	</insert>
+	<insert id="insertSelective" parameterType="com.gpms.po.Content">
+		insert into gpms_internship_content
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="lcId != null">
+				lc_id,
+			</if>
+			<if test="lcName != null">
+				lc_name,
+			</if>
+			<if test="lcContent != null">
+				lc_content,
+			</if>
+			<if test="lcStuNo != null">
+				lc_stu_no,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="lcId != null">
+				#{lcId,jdbcType=INTEGER},
+			</if>
+			<if test="lcName != null">
+				#{lcName,jdbcType=VARCHAR},
+			</if>
+			<if test="lcContent != null">
+				#{lcContent,jdbcType=VARCHAR},
+			</if>
+			<if test="lcStuNo != null">
+				#{lcStuNo,jdbcType=VARCHAR},
+			</if>
+		</trim>
+	</insert>
+	<update id="updateByPrimaryKeySelective" parameterType="com.gpms.po.Content">
+		update gpms_internship_content
+		<set>
+			<if test="lcName != null">
+				lc_name = #{lcName,jdbcType=VARCHAR},
+			</if>
+			<if test="lcContent != null">
+				lc_content = #{lcContent,jdbcType=VARCHAR},
+			</if>
+			<if test="lcStuNo != null">
+				lc_stu_no = #{lcStuNo,jdbcType=VARCHAR},
+			</if>
+		</set>
+		where lc_id = #{lcId,jdbcType=INTEGER}
+	</update>
+	<update id="updateByPrimaryKey" parameterType="com.gpms.po.Content">
+		update
+		gpms_internship_content
+		set lc_name = #{lcName,jdbcType=VARCHAR},
+		lc_content = #{lcContent,jdbcType=VARCHAR},
+		lc_stu_no =
+		#{lcStuNo,jdbcType=VARCHAR}
+		where lc_id = #{lcId,jdbcType=INTEGER}
+	</update>
+</mapper>

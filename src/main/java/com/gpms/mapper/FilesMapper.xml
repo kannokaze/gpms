@@ -1,0 +1,316 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gpms.mapper.FilesMapper">
+	<resultMap id="BaseResultMap" type="com.gpms.po.Files">
+		<id column="file_id" jdbcType="INTEGER" property="fileId" />
+		<result column="file_title" jdbcType="VARCHAR" property="fileTitle" />
+		<result column="file_original_name" jdbcType="VARCHAR"
+			property="fileOriginalName" />
+		<result column="file_new_name" jdbcType="VARCHAR" property="fileNewName" />
+		<result column="file_path" jdbcType="VARCHAR" property="filePath" />
+		<result column="file_relative_path" jdbcType="VARCHAR"
+			property="fileRelativePath" />
+		<result column="file_size" jdbcType="VARCHAR" property="fileSize" />
+		<result column="file_type" jdbcType="VARCHAR" property="fileType" />
+		<result column="file_sign" jdbcType="VARCHAR" property="fileSign" />
+		<result column="file_del_flag" jdbcType="BIT" property="fileDelFlag" />
+		<result column="file_update_time" jdbcType="TIMESTAMP"
+			property="fileUpdateTime" />
+		<result column="tea_name" jdbcType="VARCHAR" property="fileUpper" />
+		
+	</resultMap>
+	<sql id="Base_Column_List">
+		file_id, file_title, file_original_name, file_new_name,
+		file_path,
+		file_relative_path,
+		file_size, file_type, file_sign,
+		file_del_flag, file_update_time, file_upper,tea_name
+	</sql>
+
+	<!-- 查询文件列表 -->
+	<select id="selectByUpper" parameterType="java.lang.String"
+		resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from gpms_files,gpms_user_teachers
+		where gpms_files.file_upper = #{fileUpper,jdbcType=INTEGER} 
+		and
+		gpms_user_teachers.tea_no = gpms_files.file_upper
+		and
+		gpms_files.file_del_flag = 0;
+	</select>
+
+	<!-- 新增文件（条件：指导老师号） -->
+	<insert id="uploadFilesByTeaNo" parameterType="com.gpms.po.Files">
+		insert into gpms_files
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="fileId != null">
+				file_id,
+			</if>
+			<if test="fileTitle != null">
+				file_title,
+			</if>
+			<if test="fileOriginalName != null">
+				file_original_name,
+			</if>
+			<if test="fileNewName != null">
+				file_new_name,
+			</if>
+			<if test="filePath != null">
+				file_path,
+			</if>
+			<if test="fileRelativePath != null">
+				file_relative_path,
+			</if>
+			<if test="fileSize != null">
+				file_size,
+			</if>
+			<if test="fileType != null">
+				file_type,
+			</if>
+			<if test="fileSign != null">
+				file_sign,
+			</if>
+			<if test="fileDelFlag != null">
+				file_del_flag,
+			</if>
+			<if test="fileUpdateTime != null">
+				file_update_time,
+			</if>
+			<if test="fileUpper != null">
+				file_upper,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="fileId != null">
+				#{fileId,jdbcType=INTEGER},
+			</if>
+			<if test="fileTitle != null">
+				#{fileTitle,jdbcType=VARCHAR},
+			</if>
+			<if test="fileOriginalName != null">
+				#{fileOriginalName,jdbcType=VARCHAR},
+			</if>
+			<if test="fileNewName != null">
+				#{fileNewName,jdbcType=VARCHAR},
+			</if>
+			<if test="filePath != null">
+				#{filePath,jdbcType=VARCHAR},
+			</if>
+			<if test="fileRelativePath != null">
+				#{fileRelativePath,jdbcType=VARCHAR},
+			</if>
+			<if test="fileSize != null">
+				#{fileSize,jdbcType=VARCHAR},
+			</if>
+			<if test="fileType != null">
+				#{fileType,jdbcType=VARCHAR},
+			</if>
+			<if test="fileSign != null">
+				#{fileSign,jdbcType=VARCHAR},
+			</if>
+			<if test="fileDelFlag != null">
+				#{fileDelFlag,jdbcType=BIT},
+			</if>
+			<if test="fileUpdateTime != null">
+				#{fileUpdateTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="fileUpper != null">
+				#{fileUpper,jdbcType=VARCHAR},
+			</if>
+		</trim>
+	</insert>
+
+	<!-- 删除flat（条件：文件id，指导老师号） -->
+	<update id="changeFileFlag">
+		update gpms_files
+		set
+		file_del_flag = 1
+		where file_id =
+		#{0,jdbcType=INTEGER}
+		and
+		file_upper = 
+		#{1}
+	</update>
+
+	<!-- ************************************************************************************* -->
+	<select id="selectByPrimaryKey" parameterType="java.lang.Integer"
+		resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from gpms_files
+		where file_id = #{fileId,jdbcType=INTEGER}
+	</select>
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+		delete from
+		gpms_files
+		where file_id = #{fileId,jdbcType=INTEGER}
+	</delete>
+	<insert id="insert" parameterType="com.gpms.po.Files">
+		insert into gpms_files
+		(file_id, file_title, file_original_name,
+		file_new_name, file_path,
+		file_relative_path,
+		file_size, file_type, file_sign,
+		file_del_flag,
+		file_update_time, file_upper
+		)
+		values (#{fileId,jdbcType=INTEGER},
+		#{fileTitle,jdbcType=VARCHAR},
+		#{fileOriginalName,jdbcType=VARCHAR},
+		#{fileNewName,jdbcType=VARCHAR}, #{filePath,jdbcType=VARCHAR},
+		#{fileRelativePath,jdbcType=VARCHAR},
+		#{fileSize,jdbcType=VARCHAR},
+		#{fileType,jdbcType=VARCHAR},
+		#{fileSign,jdbcType=VARCHAR},
+		#{fileDelFlag,jdbcType=BIT}, #{fileUpdateTime,jdbcType=TIMESTAMP},
+		#{fileUpper,jdbcType=VARCHAR}
+		)
+	</insert>
+	<insert id="insertSelective" parameterType="com.gpms.po.Files">
+		insert into gpms_files
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="fileId != null">
+				file_id,
+			</if>
+			<if test="fileTitle != null">
+				file_title,
+			</if>
+			<if test="fileOriginalName != null">
+				file_original_name,
+			</if>
+			<if test="fileNewName != null">
+				file_new_name,
+			</if>
+			<if test="filePath != null">
+				file_path,
+			</if>
+			<if test="fileRelativePath != null">
+				file_relative_path,
+			</if>
+			<if test="fileSize != null">
+				file_size,
+			</if>
+			<if test="fileType != null">
+				file_type,
+			</if>
+			<if test="fileSign != null">
+				file_sign,
+			</if>
+			<if test="fileDelFlag != null">
+				file_del_flag,
+			</if>
+			<if test="fileUpdateTime != null">
+				file_update_time,
+			</if>
+			<if test="fileUpper != null">
+				file_upper,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="fileId != null">
+				#{fileId,jdbcType=INTEGER},
+			</if>
+			<if test="fileTitle != null">
+				#{fileTitle,jdbcType=VARCHAR},
+			</if>
+			<if test="fileOriginalName != null">
+				#{fileOriginalName,jdbcType=VARCHAR},
+			</if>
+			<if test="fileNewName != null">
+				#{fileNewName,jdbcType=VARCHAR},
+			</if>
+			<if test="filePath != null">
+				#{filePath,jdbcType=VARCHAR},
+			</if>
+			<if test="fileRelativePath != null">
+				#{fileRelativePath,jdbcType=VARCHAR},
+			</if>
+			<if test="fileSize != null">
+				#{fileSize,jdbcType=VARCHAR},
+			</if>
+			<if test="fileType != null">
+				#{fileType,jdbcType=VARCHAR},
+			</if>
+			<if test="fileSign != null">
+				#{fileSign,jdbcType=VARCHAR},
+			</if>
+			<if test="fileDelFlag != null">
+				#{fileDelFlag,jdbcType=BIT},
+			</if>
+			<if test="fileUpdateTime != null">
+				#{fileUpdateTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="fileUpper != null">
+				#{fileUpper,jdbcType=VARCHAR},
+			</if>
+		</trim>
+	</insert>
+	<update id="updateByPrimaryKeySelective" parameterType="com.gpms.po.Files">
+		update gpms_files
+		<set>
+			<if test="fileTitle != null">
+				file_title = #{fileTitle,jdbcType=VARCHAR},
+			</if>
+			<if test="fileOriginalName != null">
+				file_original_name =
+				#{fileOriginalName,jdbcType=VARCHAR},
+			</if>
+			<if test="fileNewName != null">
+				file_new_name = #{fileNewName,jdbcType=VARCHAR},
+			</if>
+			<if test="filePath != null">
+				file_path = #{filePath,jdbcType=VARCHAR},
+			</if>
+			<if test="fileRelativePath != null">
+				file_relative_path =
+				#{fileRelativePath,jdbcType=VARCHAR},
+			</if>
+			<if test="fileSize != null">
+				file_size = #{fileSize,jdbcType=VARCHAR},
+			</if>
+			<if test="fileType != null">
+				file_type = #{fileType,jdbcType=VARCHAR},
+			</if>
+			<if test="fileSign != null">
+				file_sign = #{fileSign,jdbcType=VARCHAR},
+			</if>
+			<if test="fileDelFlag != null">
+				file_del_flag = #{fileDelFlag,jdbcType=BIT},
+			</if>
+			<if test="fileUpdateTime != null">
+				file_update_time = #{fileUpdateTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="fileUpper != null">
+				file_upper = #{fileUpper,jdbcType=VARCHAR},
+			</if>
+		</set>
+		where file_id = #{fileId,jdbcType=INTEGER}
+	</update>
+	<update id="updateByPrimaryKey" parameterType="com.gpms.po.Files">
+		update gpms_files
+		set file_title = #{fileTitle,jdbcType=VARCHAR},
+		file_original_name =
+		#{fileOriginalName,jdbcType=VARCHAR},
+		file_new_name =
+		#{fileNewName,jdbcType=VARCHAR},
+		file_path =
+		#{filePath,jdbcType=VARCHAR},
+		file_relative_path =
+		#{fileRelativePath,jdbcType=VARCHAR},
+		file_size =
+		#{fileSize,jdbcType=VARCHAR},
+		file_type = #{fileType,jdbcType=VARCHAR},
+		file_sign = #{fileSign,jdbcType=VARCHAR},
+		file_del_flag =
+		#{fileDelFlag,jdbcType=BIT},
+		file_update_time =
+		#{fileUpdateTime,jdbcType=TIMESTAMP},
+		file_upper =
+		#{fileUpper,jdbcType=VARCHAR}
+		where file_id =
+		#{fileId,jdbcType=INTEGER}
+	</update>
+
+
+</mapper>

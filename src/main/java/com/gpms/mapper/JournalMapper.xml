@@ -1,0 +1,484 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gpms.mapper.JournalMapper">
+	<resultMap id="BaseResultMap" type="com.gpms.po.Journal">
+		<id column="jour_id" jdbcType="INTEGER" property="jourId" />
+		<result column="jour_title" jdbcType="VARCHAR" property="jourTitle" />
+		<result column="jour_uploadtime" jdbcType="TIMESTAMP" property="jourUploadtime" />
+		<result column="jour_lastmodified" jdbcType="TIMESTAMP"
+			property="jourLastmodified" />
+		<result column="jour_savetime" jdbcType="TIMESTAMP" property="jourSavetime" />
+		<result column="jour_status" jdbcType="VARCHAR" property="jourStatus" />
+		<result column="jour_score" jdbcType="DECIMAL" property="jourScore" />
+		<result column="jour_comment" jdbcType="VARCHAR" property="jourComment" />
+		<result column="jour_stu_no" jdbcType="VARCHAR" property="jourStuNo" />
+	</resultMap>
+
+	<resultMap id="BaseResultMap1" type="com.gpms.po.Journal">
+		<id column="jour_id" jdbcType="INTEGER" property="jourId" />
+		<result column="jour_title" jdbcType="VARCHAR" property="jourTitle" />
+		<result column="jour_uploadtime" jdbcType="TIMESTAMP" property="jourUploadtime" />
+		<result column="jour_lastmodified" jdbcType="TIMESTAMP"
+			property="jourLastmodified" />
+		<result column="jour_savetime" jdbcType="TIMESTAMP" property="jourSavetime" />
+		<result column="jour_status" jdbcType="VARCHAR" property="jourStatus" />
+		<result column="jour_score" jdbcType="DECIMAL" property="jourScore" />
+		<result column="jour_comment" jdbcType="VARCHAR" property="jourComment" />
+		<result column="jour_stu_no" jdbcType="VARCHAR" property="jourStuNo" />
+		<result column="stu_no" jdbcType="VARCHAR" property="stuNo" />
+		<result column="stu_name" jdbcType="VARCHAR" property="stuName" />
+		<result column="stu_phone" jdbcType="CHAR" property="stuPhone" />
+		<result column="stu_email" jdbcType="VARCHAR" property="stuEmail" />
+		<result column="stu_gender" jdbcType="INTEGER" property="stuGender" />
+		<result column="stu_address" jdbcType="VARCHAR" property="stuAddress" />
+		<result column="stu_state" jdbcType="CHAR" property="stuState" />
+		<result column="stu_stage" jdbcType="VARCHAR" property="stuStage" />
+	</resultMap>
+
+	<resultMap extends="BaseResultMap" id="ResultMapWithBLOBs"
+		type="com.gpms.po.Journal">
+		<result column="jour_content" jdbcType="LONGVARCHAR" property="jourContent" />
+	</resultMap>
+
+	<resultMap extends="BaseResultMap1" id="ResultMapWithBLOBs1"
+		type="com.gpms.po.Journal">
+		<result column="jour_content" jdbcType="LONGVARCHAR" property="jourContent" />
+	</resultMap>
+
+
+	<sql id="Base_Column_List">
+		jour_id, jour_title, jour_uploadtime, jour_lastmodified,
+		jour_savetime,
+		jour_status,
+		jour_score,
+		jour_comment,
+		jour_stu_no
+	</sql>
+	
+	<sql id="Base_Column_List1">
+		gpms_internship_journal.jour_id, jour_title,
+		gpms_internship_journal.jour_uploadtime,
+		gpms_internship_journal.jour_lastmodified,
+		gpms_internship_journal.jour_savetime,
+		gpms_internship_journal.jour_status,
+		gpms_internship_journal.jour_score,
+		gpms_internship_journal.jour_comment,
+		gpms_internship_journal.jour_stu_no,
+		gpms_user_students.stu_no,
+		
+		gpms_user_students.stu_name,
+		gpms_user_students.stu_phone,
+		gpms_user_students.stu_email,
+		gpms_user_students.stu_gender,
+		gpms_user_students.stu_address,
+		gpms_user_students.stu_state,
+		gpms_user_students.stu_stage
+	</sql>
+
+	<sql id="Blob_Column_List">
+		gpms_internship_journal.jour_content
+	</sql>
+
+	<!-- 查询日志列表（条件：学号） -->
+	<select id="searchJournalByStuNo" parameterType="java.lang.String"
+		resultMap="ResultMapWithBLOBs">
+		select
+		<include refid="Base_Column_List" />
+		,
+		<include refid="Blob_Column_List" />
+		from gpms_internship_journal
+		where jour_stu_no =
+		#{stuNo,jdbcType=VARCHAR}
+		and
+		jour_status != '2'
+	</select>
+
+	<!-- 查询日志列表（条件：公司acc） -->
+	<select id="searchJournalByComAcc" parameterType="java.lang.String"
+		resultMap="ResultMapWithBLOBs1">
+		select
+		<include refid="Base_Column_List1" />
+		,
+		<include refid="Blob_Column_List" />
+		from gpms_internship_journal,
+		gpms_user_students,gpms_rela_stu_com
+		where gpms_internship_journal.jour_stu_no = 
+		gpms_user_students.stu_no
+		and
+		gpms_user_students.stu_no =
+		gpms_rela_stu_com.sc_stu_no
+		and
+		gpms_rela_stu_com.sc_com_acc = #{0}
+		and 
+		gpms_user_students.stu_stage = #{1}
+		and
+		gpms_internship_journal.jour_status = '1'
+	</select>
+
+
+
+	<!-- 保存日志内容（新建） -->
+	<insert id="saveJourNew" parameterType="com.gpms.po.Journal">
+		insert into gpms_internship_journal
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="jourId != null">
+				jour_id,
+			</if>
+			<if test="jourTitle != null">
+				jour_title,
+			</if>
+			<if test="jourUploadtime != null">
+				jour_uploadtime,
+			</if>
+			<if test="jourLastmodified != null">
+				jour_lastmodified,
+			</if>
+			<if test="jourSavetime != null">
+				jour_savetime,
+			</if>
+			<if test="jourStatus != null">
+				jour_status,
+			</if>
+			<if test="jourStuNo != null">
+				jour_stu_no,
+			</if>
+			<if test="jourContent != null">
+				jour_content,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="jourId != null">
+				#{jourId,jdbcType=INTEGER},
+			</if>
+			<if test="jourTitle != null">
+				#{jourTitle,jdbcType=VARCHAR},
+			</if>
+			<if test="jourUploadtime != null">
+				#{jourUploadtime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="jourLastmodified != null">
+				#{jourLastmodified,jdbcType=TIMESTAMP},
+			</if>
+			<if test="jourSavetime != null">
+				#{jourSavetime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="jourStatus != null">
+				#{jourStatus,jdbcType=VARCHAR},
+			</if>
+			<if test="jourStuNo != null">
+				#{jourStuNo,jdbcType=VARCHAR},
+			</if>
+			<if test="jourContent != null">
+				#{jourContent,jdbcType=LONGVARCHAR},
+			</if>
+		</trim>
+	</insert>
+
+	<!-- 保存日志内容 -->
+	<update id="saveJour" parameterType="com.gpms.po.Journal">
+		update gpms_internship_journal
+		<set>
+			<if test="jourTitle != null">
+				jour_title = #{jourTitle,jdbcType=VARCHAR},
+			</if>
+			<if test="jourUploadtime != null">
+				jour_uploadtime = #{jourUploadtime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="jourLastmodified != null">
+				jour_lastmodified =
+				#{jourLastmodified,jdbcType=TIMESTAMP},
+			</if>
+			<if test="jourSavetime != null">
+				jour_savetime = #{jourSavetime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="jourStatus != null">
+				jour_status = #{jourStatus,jdbcType=VARCHAR},
+			</if>
+			<if test="jourStuNo != null">
+				jour_stu_no = #{jourStuNo,jdbcType=VARCHAR},
+			</if>
+			<if test="jourContent != null">
+				jour_content = #{jourContent,jdbcType=LONGVARCHAR},
+			</if>
+		</set>
+		where jour_id = #{jourId,jdbcType=INTEGER}
+	</update>
+
+
+	<!-- 提交日志内容 -->
+	<update id="upJour" parameterType="com.gpms.po.Journal">
+		update gpms_internship_journal
+		<set>
+			<if test="jourTitle != null">
+				jour_title = #{jourTitle,jdbcType=VARCHAR},
+			</if>
+			<if test="jourUploadtime != null">
+				jour_uploadtime = #{jourUploadtime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="jourLastmodified != null">
+				jour_lastmodified =
+				#{jourLastmodified,jdbcType=TIMESTAMP},
+			</if>
+			<if test="jourSavetime != null">
+				jour_savetime = #{jourSavetime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="jourStatus != null">
+				jour_status = #{jourStatus,jdbcType=VARCHAR},
+			</if>
+			<if test="jourStuNo != null">
+				jour_stu_no = #{jourStuNo,jdbcType=VARCHAR},
+			</if>
+			<if test="jourContent != null">
+				jour_content = #{jourContent,jdbcType=LONGVARCHAR},
+			</if>
+		</set>
+		where jour_id = #{jourId,jdbcType=INTEGER}
+	</update>
+
+	<!-- 提交日志内容（新建） -->
+	<insert id="upJourNew" parameterType="com.gpms.po.Journal">
+		insert into gpms_internship_journal
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="jourId != null">
+				jour_id,
+			</if>
+			<if test="jourTitle != null">
+				jour_title,
+			</if>
+			<if test="jourUploadtime != null">
+				jour_uploadtime,
+			</if>
+			<if test="jourLastmodified != null">
+				jour_lastmodified,
+			</if>
+			<if test="jourSavetime != null">
+				jour_savetime,
+			</if>
+			<if test="jourStatus != null">
+				jour_status,
+			</if>
+			<if test="jourStuNo != null">
+				jour_stu_no,
+			</if>
+			<if test="jourContent != null">
+				jour_content,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="jourId != null">
+				#{jourId,jdbcType=INTEGER},
+			</if>
+			<if test="jourTitle != null">
+				#{jourTitle,jdbcType=VARCHAR},
+			</if>
+			<if test="jourUploadtime != null">
+				#{jourUploadtime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="jourLastmodified != null">
+				#{jourLastmodified,jdbcType=TIMESTAMP},
+			</if>
+			<if test="jourSavetime != null">
+				#{jourSavetime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="jourStatus != null">
+				#{jourStatus,jdbcType=VARCHAR},
+			</if>
+			<if test="jourStuNo != null">
+				#{jourStuNo,jdbcType=VARCHAR},
+			</if>
+			<if test="jourContent != null">
+				#{jourContent,jdbcType=LONGVARCHAR},
+			</if>
+		</trim>
+	</insert>
+
+	<update id="gradeJour" parameterType="com.gpms.po.Journal">
+		update gpms_internship_journal
+		<set>
+			<if test="jourTitle != null">
+				jour_title = #{jourTitle,jdbcType=VARCHAR},
+			</if>
+			<if test="jourUploadtime != null">
+				jour_uploadtime = #{jourUploadtime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="jourLastmodified != null">
+				jour_lastmodified =
+				#{jourLastmodified,jdbcType=TIMESTAMP},
+			</if>
+			<if test="jourSavetime != null">
+				jour_savetime = #{jourSavetime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="jourStatus != null">
+				jour_status = #{jourStatus,jdbcType=VARCHAR},
+			</if>
+			<if test="jourScore != null">
+				jour_score = #{jourScore,jdbcType=VARCHAR},
+			</if>
+			<if test="jourComment != null">
+				jour_comment = #{jourComment,jdbcType=VARCHAR},
+			</if>
+			<if test="jourStuNo != null">
+				jour_stu_no = #{jourStuNo,jdbcType=VARCHAR},
+			</if>
+			<if test="jourContent != null">
+				jour_content = #{jourContent,jdbcType=LONGVARCHAR},
+			</if>
+		</set>
+		where jour_id = #{jourId,jdbcType=INTEGER}
+	</update>
+
+
+
+
+
+	<!-- *************************************************************************************** -->
+	<select id="selectByPrimaryKey" parameterType="java.lang.Integer"
+		resultMap="ResultMapWithBLOBs">
+		select
+		<include refid="Base_Column_List" />
+		,
+		<include refid="Blob_Column_List" />
+		from gpms_internship_journal
+		where jour_id =
+		#{jourId,jdbcType=INTEGER}
+	</select>
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+		delete from
+		gpms_internship_journal
+		where jour_id = #{jourId,jdbcType=INTEGER}
+	</delete>
+	<insert id="insert" parameterType="com.gpms.po.Journal">
+		insert into
+		gpms_internship_journal (jour_id, jour_title, jour_uploadtime,
+		jour_lastmodified, jour_savetime, jour_status,
+		jour_stu_no,
+		jour_content)
+		values (#{jourId,jdbcType=INTEGER},
+		#{jourTitle,jdbcType=VARCHAR},
+		#{jourUploadtime,jdbcType=TIMESTAMP},
+		#{jourLastmodified,jdbcType=TIMESTAMP},
+		#{jourSavetime,jdbcType=TIMESTAMP}, #{jourStatus,jdbcType=VARCHAR},
+		#{jourStuNo,jdbcType=VARCHAR}, #{jourContent,jdbcType=LONGVARCHAR})
+	</insert>
+	<insert id="insertSelective" parameterType="com.gpms.po.Journal">
+		insert into gpms_internship_journal
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="jourId != null">
+				jour_id,
+			</if>
+			<if test="jourTitle != null">
+				jour_title,
+			</if>
+			<if test="jourUploadtime != null">
+				jour_uploadtime,
+			</if>
+			<if test="jourLastmodified != null">
+				jour_lastmodified,
+			</if>
+			<if test="jourSavetime != null">
+				jour_savetime,
+			</if>
+			<if test="jourStatus != null">
+				jour_status,
+			</if>
+			<if test="jourStuNo != null">
+				jour_stu_no,
+			</if>
+			<if test="jourContent != null">
+				jour_content,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="jourId != null">
+				#{jourId,jdbcType=INTEGER},
+			</if>
+			<if test="jourTitle != null">
+				#{jourTitle,jdbcType=VARCHAR},
+			</if>
+			<if test="jourUploadtime != null">
+				#{jourUploadtime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="jourLastmodified != null">
+				#{jourLastmodified,jdbcType=TIMESTAMP},
+			</if>
+			<if test="jourSavetime != null">
+				#{jourSavetime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="jourStatus != null">
+				#{jourStatus,jdbcType=VARCHAR},
+			</if>
+			<if test="jourStuNo != null">
+				#{jourStuNo,jdbcType=VARCHAR},
+			</if>
+			<if test="jourContent != null">
+				#{jourContent,jdbcType=LONGVARCHAR},
+			</if>
+		</trim>
+	</insert>
+	<update id="updateByPrimaryKeySelective" parameterType="com.gpms.po.Journal">
+		update gpms_internship_journal
+		<set>
+			<if test="jourTitle != null">
+				jour_title = #{jourTitle,jdbcType=VARCHAR},
+			</if>
+			<if test="jourUploadtime != null">
+				jour_uploadtime = #{jourUploadtime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="jourLastmodified != null">
+				jour_lastmodified =
+				#{jourLastmodified,jdbcType=TIMESTAMP},
+			</if>
+			<if test="jourSavetime != null">
+				jour_savetime = #{jourSavetime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="jourStatus != null">
+				jour_status = #{jourStatus,jdbcType=VARCHAR},
+			</if>
+			<if test="jourStuNo != null">
+				jour_stu_no = #{jourStuNo,jdbcType=VARCHAR},
+			</if>
+			<if test="jourContent != null">
+				jour_content = #{jourContent,jdbcType=LONGVARCHAR},
+			</if>
+		</set>
+		where jour_id = #{jourId,jdbcType=INTEGER}
+	</update>
+	<update id="updateByPrimaryKeyWithBLOBs" parameterType="com.gpms.po.Journal">
+		update
+		gpms_internship_journal
+		set jour_title =
+		#{jourTitle,jdbcType=VARCHAR},
+		jour_uploadtime =
+		#{jourUploadtime,jdbcType=TIMESTAMP},
+		jour_lastmodified =
+		#{jourLastmodified,jdbcType=TIMESTAMP},
+		jour_savetime =
+		#{jourSavetime,jdbcType=TIMESTAMP},
+		jour_status =
+		#{jourStatus,jdbcType=VARCHAR},
+		jour_stu_no =
+		#{jourStuNo,jdbcType=VARCHAR},
+		jour_content =
+		#{jourContent,jdbcType=LONGVARCHAR}
+		where jour_id =
+		#{jourId,jdbcType=INTEGER}
+	</update>
+	<update id="updateByPrimaryKey" parameterType="com.gpms.po.Journal">
+		update
+		gpms_internship_journal
+		set jour_title =
+		#{jourTitle,jdbcType=VARCHAR},
+		jour_uploadtime =
+		#{jourUploadtime,jdbcType=TIMESTAMP},
+		jour_lastmodified =
+		#{jourLastmodified,jdbcType=TIMESTAMP},
+		jour_savetime =
+		#{jourSavetime,jdbcType=TIMESTAMP},
+		jour_status =
+		#{jourStatus,jdbcType=VARCHAR},
+		jour_stu_no =
+		#{jourStuNo,jdbcType=VARCHAR}
+		where jour_id =
+		#{jourId,jdbcType=INTEGER}
+	</update>
+</mapper>

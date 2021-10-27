@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.gpms.mapper.ProjectMapper" >
+  <resultMap id="BaseResultMap" type="com.gpms.po.Project" >
+    <id column="pro_id" property="proId" jdbcType="INTEGER" />
+    <result column="pro_name" property="proName" jdbcType="VARCHAR" />
+    <result column="pro_sign" property="proSign" jdbcType="VARCHAR" />
+    <result column="pro_starttime" property="proStarttime" jdbcType="TIMESTAMP" />
+    <result column="pro_endtime" property="proEndtime" jdbcType="TIMESTAMP" />
+    <result column="pro_con_id" property="proConId" jdbcType="INTEGER" />
+    <result column="pro_com_acc" property="proComAcc" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    pro_id, pro_name, pro_sign, pro_starttime, pro_endtime, pro_con_id, pro_com_acc
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from gpms_internship_project
+    where pro_id = #{proId,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from gpms_internship_project
+    where pro_id = #{proId,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.gpms.po.Project" >
+    insert into gpms_internship_project (pro_id, pro_name, pro_sign, 
+      pro_starttime, pro_endtime, pro_con_id, 
+      pro_com_acc)
+    values (#{proId,jdbcType=INTEGER}, #{proName,jdbcType=VARCHAR}, #{proSign,jdbcType=VARCHAR}, 
+      #{proStarttime,jdbcType=TIMESTAMP}, #{proEndtime,jdbcType=TIMESTAMP}, #{proConId,jdbcType=INTEGER}, 
+      #{proComAcc,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.gpms.po.Project" >
+    insert into gpms_internship_project
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="proId != null" >
+        pro_id,
+      </if>
+      <if test="proName != null" >
+        pro_name,
+      </if>
+      <if test="proSign != null" >
+        pro_sign,
+      </if>
+      <if test="proStarttime != null" >
+        pro_starttime,
+      </if>
+      <if test="proEndtime != null" >
+        pro_endtime,
+      </if>
+      <if test="proConId != null" >
+        pro_con_id,
+      </if>
+      <if test="proComAcc != null" >
+        pro_com_acc,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="proId != null" >
+        #{proId,jdbcType=INTEGER},
+      </if>
+      <if test="proName != null" >
+        #{proName,jdbcType=VARCHAR},
+      </if>
+      <if test="proSign != null" >
+        #{proSign,jdbcType=VARCHAR},
+      </if>
+      <if test="proStarttime != null" >
+        #{proStarttime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="proEndtime != null" >
+        #{proEndtime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="proConId != null" >
+        #{proConId,jdbcType=INTEGER},
+      </if>
+      <if test="proComAcc != null" >
+        #{proComAcc,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.gpms.po.Project" >
+    update gpms_internship_project
+    <set >
+      <if test="proName != null" >
+        pro_name = #{proName,jdbcType=VARCHAR},
+      </if>
+      <if test="proSign != null" >
+        pro_sign = #{proSign,jdbcType=VARCHAR},
+      </if>
+      <if test="proStarttime != null" >
+        pro_starttime = #{proStarttime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="proEndtime != null" >
+        pro_endtime = #{proEndtime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="proConId != null" >
+        pro_con_id = #{proConId,jdbcType=INTEGER},
+      </if>
+      <if test="proComAcc != null" >
+        pro_com_acc = #{proComAcc,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where pro_id = #{proId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.gpms.po.Project" >
+    update gpms_internship_project
+    set pro_name = #{proName,jdbcType=VARCHAR},
+      pro_sign = #{proSign,jdbcType=VARCHAR},
+      pro_starttime = #{proStarttime,jdbcType=TIMESTAMP},
+      pro_endtime = #{proEndtime,jdbcType=TIMESTAMP},
+      pro_con_id = #{proConId,jdbcType=INTEGER},
+      pro_com_acc = #{proComAcc,jdbcType=VARCHAR}
+    where pro_id = #{proId,jdbcType=INTEGER}
+  </update>
+</mapper>

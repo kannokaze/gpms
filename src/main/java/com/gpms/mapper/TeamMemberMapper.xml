@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gpms.mapper.TeamMemberMapper">
+	<resultMap id="BaseResultMap" type="com.gpms.po.TeamMember">
+		<id column="tm_id" jdbcType="INTEGER" property="tmId" />
+		<result column="tm_duty" jdbcType="VARCHAR" property="tmDuty" />
+		<result column="tm_name" jdbcType="VARCHAR" property="tmName" />
+		<result column="tm_team_code" jdbcType="VARCHAR" property="tmTeamCode" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		tm_id, tm_duty, tm_name, tm_team_code
+	</sql>
+	
+	<!-- ********************************************************** -->
+	<select id="selectByPrimaryKey" parameterType="java.lang.Integer"
+		resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from gpms_internship_team_member
+		where tm_id = #{tmId,jdbcType=INTEGER}
+	</select>
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+		delete from
+		gpms_internship_team_member
+		where tm_id = #{tmId,jdbcType=INTEGER}
+	</delete>
+	<insert id="insert" parameterType="com.gpms.po.TeamMember">
+		insert into
+		gpms_internship_team_member (tm_id, tm_duty, tm_name,
+		tm_team_code)
+		values (#{tmId,jdbcType=INTEGER}, #{tmDuty,jdbcType=VARCHAR},
+		#{tmName,jdbcType=VARCHAR},
+		#{tmTeamCode,jdbcType=VARCHAR})
+	</insert>
+	<insert id="insertSelective" parameterType="com.gpms.po.TeamMember">
+		insert into gpms_internship_team_member
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="tmId != null">
+				tm_id,
+			</if>
+			<if test="tmDuty != null">
+				tm_duty,
+			</if>
+			<if test="tmName != null">
+				tm_name,
+			</if>
+			<if test="tmTeamCode != null">
+				tm_team_code,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="tmId != null">
+				#{tmId,jdbcType=INTEGER},
+			</if>
+			<if test="tmDuty != null">
+				#{tmDuty,jdbcType=VARCHAR},
+			</if>
+			<if test="tmName != null">
+				#{tmName,jdbcType=VARCHAR},
+			</if>
+			<if test="tmTeamCode != null">
+				#{tmTeamCode,jdbcType=VARCHAR},
+			</if>
+		</trim>
+	</insert>
+	<update id="updateByPrimaryKeySelective" parameterType="com.gpms.po.TeamMember">
+		update gpms_internship_team_member
+		<set>
+			<if test="tmDuty != null">
+				tm_duty = #{tmDuty,jdbcType=VARCHAR},
+			</if>
+			<if test="tmName != null">
+				tm_name = #{tmName,jdbcType=VARCHAR},
+			</if>
+			<if test="tmTeamCode != null">
+				tm_team_code = #{tmTeamCode,jdbcType=VARCHAR},
+			</if>
+		</set>
+		where tm_id = #{tmId,jdbcType=INTEGER}
+	</update>
+	<update id="updateByPrimaryKey" parameterType="com.gpms.po.TeamMember">
+		update
+		gpms_internship_team_member
+		set tm_duty = #{tmDuty,jdbcType=VARCHAR},
+		tm_name = #{tmName,jdbcType=VARCHAR},
+		tm_team_code =
+		#{tmTeamCode,jdbcType=VARCHAR}
+		where tm_id = #{tmId,jdbcType=INTEGER}
+	</update>
+</mapper>

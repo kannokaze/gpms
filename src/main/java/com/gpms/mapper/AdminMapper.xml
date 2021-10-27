@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gpms.mapper.AdminMapper">
+	<resultMap id="BaseResultMap" type="com.gpms.po.Admin">
+		<result column="admin_id" jdbcType="INTEGER" property="adminId" />
+		<result column="admin_account" jdbcType="VARCHAR" property="adminAccount" />
+		<result column="admin_name" jdbcType="VARCHAR" property="adminName" />
+		<result column="admin_password" jdbcType="VARCHAR" property="adminPassword" />
+		<result column="admin_relaction" jdbcType="VARCHAR" property="adminRelaction" />
+		<result column="admin_position" jdbcType="VARCHAR" property="adminPosition" />
+		<result column="admin_type" jdbcType="VARCHAR" property="adminType" />
+	</resultMap>
+
+	<sql id="Base_Column_List">
+		admin_id,admin_account,admin_name,admin_password,admin_relaction,admin_position,admin_type
+	</sql>
+
+	<select id="searchAdminInfoByAdminAcc" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from gpms_user_admin
+		where admin_account = #{0}
+	</select>
+	<!-- -->
+	<select id="selectByAccountAndPwd" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from gpms_user_admin
+		where admin_account = #{0}
+		and
+		admin_password = #{1}
+	</select>
+	<update id="updateAdminInfoByAdminAcc" parameterType="com.gpms.po.Admin">
+		update gpms_user_admin
+		<set>
+			<if test="adminAccount != null">
+				admin_account = #{adminAccount,jdbcType=VARCHAR},
+			</if>
+			<if test="adminName != null">
+				admin_name = #{adminName,jdbcType=VARCHAR},
+			</if>
+			<if test="adminPassword != null">
+				admin_password = #{adminPassword,jdbcType=VARCHAR},
+			</if>
+			<if test="adminRelaction != null">
+				admin_relaction = #{adminRelaction,jdbcType=VARCHAR},
+			</if>
+			<if test="adminPosition != null">
+				admin_position = #{adminPosition,jdbcType=VARCHAR},
+			</if>
+			<if test="adminType != null">
+				admin_type = #{adminType,jdbcType=VARCHAR},
+			</if>
+		</set>
+		where admin_account = #{adminAccount,jdbcType=VARCHAR}
+	</update>
+
+
+	<!-- *********************************************** -->
+	<insert id="insert" parameterType="com.gpms.po.Admin">
+		insert into gpms_user_admin
+		(admin_id, admin_account, admin_name,
+		admin_password, admin_relaction,
+		admin_position,
+		admin_type)
+		values (#{adminId,jdbcType=INTEGER},
+		#{adminAccount,jdbcType=VARCHAR},
+		#{adminName,jdbcType=VARCHAR},
+		#{adminPassword,jdbcType=VARCHAR}, #{adminRelaction,jdbcType=VARCHAR},
+		#{adminPosition,jdbcType=VARCHAR},
+		#{adminType,jdbcType=VARCHAR})
+	</insert>
+	<insert id="insertSelective" parameterType="com.gpms.po.Admin">
+		insert into gpms_user_admin
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="adminId != null">
+				admin_id,
+			</if>
+			<if test="adminAccount != null">
+				admin_account,
+			</if>
+			<if test="adminName != null">
+				admin_name,
+			</if>
+			<if test="adminPassword != null">
+				admin_password,
+			</if>
+			<if test="adminRelaction != null">
+				admin_relaction,
+			</if>
+			<if test="adminPosition != null">
+				admin_position,
+			</if>
+			<if test="adminType != null">
+				admin_type,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="adminId != null">
+				#{adminId,jdbcType=INTEGER},
+			</if>
+			<if test="adminAccount != null">
+				#{adminAccount,jdbcType=VARCHAR},
+			</if>
+			<if test="adminName != null">
+				#{adminName,jdbcType=VARCHAR},
+			</if>
+			<if test="adminPassword != null">
+				#{adminPassword,jdbcType=VARCHAR},
+			</if>
+			<if test="adminRelaction != null">
+				#{adminRelaction,jdbcType=VARCHAR},
+			</if>
+			<if test="adminPosition != null">
+				#{adminPosition,jdbcType=VARCHAR},
+			</if>
+			<if test="adminType != null">
+				#{adminType,jdbcType=VARCHAR},
+			</if>
+		</trim>
+	</insert>
+</mapper>

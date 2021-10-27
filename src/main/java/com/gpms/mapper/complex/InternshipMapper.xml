@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.gpms.mapper.complex.InternshipMapper">
+
+	<!-- 返回结果预设Map -->
+	<resultMap id="BaseResultMap" type="com.gpms.po.Major">
+		<!-- 表Content字段 -->
+		<id column="lc_id" property="lcId" jdbcType="INTEGER" />
+		<result column="lc_name" property="lcName" jdbcType="VARCHAR" />
+		<result column="lc_content" property="lcContent" jdbcType="VARCHAR" />
+		<result column="lc_stu_id" property="lcStuId" jdbcType="INTEGER" />
+		
+		<!-- 表Project字段 -->
+		
+	</resultMap>
+
+
+	<sql id="Base_Column_List">
+		maj_id, maj_code, maj_name, maj_sign
+	</sql>
+
+	<!-- 关联表查询字段 -->
+	<sql id="Column_List">
+		gpms_major.maj_id, gpms_major.maj_code,
+		gpms_major.maj_name, gpms_major.maj_sign,
+		gpms_major_direction.dir_name,gpms_major_direction.dir_sign,gpms_major_direction.dir_mar_id
+	</sql>
+	<!-- 查询专业和方向 -->
+	<select id="selectMajorAndDirection" resultMap="BaseResultMap">
+		select
+		<include refid="Column_List" />
+		from gpms_major
+		LEFT JOIN gpms_major_direction
+		ON
+		gpms_major.maj_id =
+		gpms_major_direction.dir_mar_id
+	</select>
+
+
+
+	<!-- *********************************************************************** -->
+
+</mapper>
